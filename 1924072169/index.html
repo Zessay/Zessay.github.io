@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Zessay的博客">
 <meta property="og:description" content="本文主要对Attention机制进行了简单的介绍。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-13T14:47:29.954Z">
+<meta property="og:updated_time" content="2019-09-13T14:51:14.334Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Deep Learning笔记——关于Attention">
 <meta name="twitter:description" content="本文主要对Attention机制进行了简单的介绍。">
@@ -192,7 +192,7 @@
 <p>为了从$N$个输入向量$[x_1, \cdots, x_N]$中选择出和某个特定任务相关的信息，我们需要引入一个和任务相关的表示，称为<font color="red"><strong>查询向量</strong></font>(Query Vector)，并通过一个打分函数来计算<strong>每个输入向量和查询向量之间的相关性</strong>。</p>
 </blockquote>
 <h1 id="2-不同形式的Attention"><a href="#2-不同形式的Attention" class="headerlink" title="2. 不同形式的Attention"></a><font size="4">2. 不同形式的Attention</font></h1><h2 id="2-1-软性注意力Soft-Attention"><a href="#2-1-软性注意力Soft-Attention" class="headerlink" title="2.1 软性注意力Soft Attention"></a><font size="3">2.1 软性注意力<code>Soft Attention</code></font></h2><p>（1）给定一个和任务相关的查询向量$q$，我们用 <strong>注意力变量$z \in [1, N]$</strong> 来表示被选择信息的索引位置，即$z=i$表示选择了第$i$个输入向量。这里采用<code>Soft Attention</code>的方式，即计算在给定$q$和$X$下，选择第$i$个输入向量的概率$\alpha_i$：</p>
-<p>$$<br>\begin{align} \alpha_i &amp;= p(z=i | X, q) \  &amp;= \text{softmax}(s(x_i, q)) \ &amp;= \frac{\exp \big( s(x_i, q) \big)}{\sum_{j=1}^N \exp \big( s(x_j, q)\big)} \end{align}<br>$$</p>
+<p>$$<br>\begin{align} \alpha_i &amp;= p(z=i | X, q) \\\  &amp;= \text{softmax}(s(x_i, q)) \\\ &amp;= \frac{\exp \big( s(x_i, q) \big)}{\sum_{j=1}^N \exp \big( s(x_j, q)\big)} \end{align}<br>$$</p>
 <p>（2）上式中$\alpha_i$称为注意力分布，$s(x_i, q)$是注意力打分函数，常见的计算方式为：</p>
 <ul>
 <li><strong>加性模型</strong>：$s(x_i, q) = v^T \tanh (W x_i + U q)$</li>
@@ -202,7 +202,7 @@
 </ul>
 <p>&emsp;其中$W, U, v$为可学习的网络参数，$d$为输入向量的维度。</p>
 <p>（3）<strong>加权平均</strong>：注意力分布$\alpha_i$可以解释为在给定任务相关的查询$q$时，第$i$个输入向量受关注的程度。于是可以采用一种软性的注意力选择机制对输入信息进行汇总。</p>
-<p>$$<br>\begin{align} \text{att}(X, q) &amp;= \sum_{i=1}^N \alpha_i x_i  \  &amp;= \mathbb{E}_{z \sim p(z | X, q)} [x] \end{align}<br>$$</p>
+<p>$$<br>\begin{align} \text{att}(X, q) &amp;= \sum_{i=1}^N \alpha_i x_i  \\\  &amp;= \mathbb{E}_{z \sim p(z | X, q)} [x] \end{align}<br>$$</p>
 <h2 id="2-2-硬性注意力Hard-Attention"><a href="#2-2-硬性注意力Hard-Attention" class="headerlink" title="2.2 硬性注意力Hard Attention"></a><font size="3">2.2 硬性注意力<code>Hard Attention</code></font></h2><p>（1）Soft Attention选择的是所有输入向量在注意力分布下的期望。而硬性注意力<strong>只关注到某一个输入向量</strong>。</p>
 <p>（2）Hard Attention的两种实现方式：</p>
 <ul>
@@ -212,7 +212,7 @@
 <p>（3）Hard Attention缺点在于基于最大采样或者随机采样的方式选择信息，导致最终的损失函数与注意力分布之间的函数关系不可导，因此无法在反向传播时进行训练。</p>
 <h2 id="2-3-键值对注意力"><a href="#2-3-键值对注意力" class="headerlink" title="2.3 键值对注意力"></a><font size="3">2.3 键值对注意力</font></h2><p>（1）更一般的可以使用键值对<code>key-value pair</code>格式来表示输入信息，其中<strong>键用来计算注意力分布$\alpha_i$，值用来计算聚合信息</strong>。比如<code>Self Attention</code>。</p>
 <p>（2）用$(K, V) = [(k_1, v_1), \cdots, (k_N, v_N)]$表示$N$组输入信息，给定任务相关的查询向量$q$时，注意力函数为：</p>
-<p>$$<br>\begin{align} \text{att} \big((K,V), q \big) &amp;= \sum_{i=1}^N \alpha_i v_i   \ \ &amp;= \sum_{i=1}^N \frac{\exp \big(s(k_i, q)\big)}{\sum_j \exp \big(s(k_j, q)\big)} v_i \end{align}<br>$$</p>
+<p>$$<br>\begin{align} \text{att} \big((K,V), q \big) &amp;= \sum_{i=1}^N \alpha_i v_i    \\\  &amp;= \sum_{i=1}^N \frac{\exp \big(s(k_i, q)\big)}{\sum_j \exp \big(s(k_j, q)\big)} v_i \end{align}<br>$$</p>
 <p>&emsp;显然，当$K=V$的时候，键值对就等价于普通注意力机制。</p>
 <h2 id="2-4-多头注意力"><a href="#2-4-多头注意力" class="headerlink" title="2.4 多头注意力"></a><font size="3">2.4 多头注意力</font></h2><p>（1）多头注意力是利用多个查询$Q = [q_1, \cdots, q_M]$，来平行地计算从输入信息中选取多组信息。每个注意力关注输入信息的不同部分。</p>
 <p>$$<br>\text{att} \big( (K, V), Q \big) = \text{att} \big((K,V),q_1\big) \oplus \cdots \oplus \text{att} \big( (K, V), q_M \big)<br>$$</p>
@@ -354,6 +354,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/b5f422e3/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          about
+        
+      </div>
+    </a>
   
   
     <a href="/2615916013/" id="article-nav-older" class="article-nav-link-wrap">
@@ -559,15 +568,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Tensorflow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">LeetCode</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Tensorflow</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -579,15 +588,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">编程</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
               </li>
             
             <div class="clearfix"></div>
