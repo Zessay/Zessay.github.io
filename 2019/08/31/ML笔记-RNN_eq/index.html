@@ -20,7 +20,7 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006Ejijoly1g6fqqao0s9j30ow09ujs1.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006Ejijoly1g6fs147e20j30so0dwtal.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006Ejijoly1g6fsubfvj9j30s00eq0us.jpg">
-<meta property="og:updated_time" content="2019-09-13T11:17:36.495Z">
+<meta property="og:updated_time" content="2019-09-13T13:48:31.102Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Deep Learning笔记——RNN&amp;LSTM&amp;GRU">
 <meta name="twitter:description" content="本文主要记录了RNN前向传播和后向传播的推导过程，同时介绍了一下LSTM和GRU的原理及计算公式。">
@@ -191,7 +191,7 @@
 
 <p><br><br>&emsp;设RNN从输入层到隐层的参数矩阵为$W<em>{xh}$，从上一个时间步到下一个时间步的隐层参数矩阵为$W</em>{hh}$，从当前时间步隐层结果到输出层结果的参数矩阵为$W_{hy}$；输出层的激活函数为$\text{softmax}$，损失函数为$\text{crossEntropy}$。于是得到下面公式：</p>
 <script type="math/tex; mode=display">
-\begin{cases}a^{(t)} = W_{xh} x^{(t)} + W_{hh} h^{(t-1)} + b_{xh} \\ h^{(t)} = f(a^{(t)}) \\  o^{(t)} = W_{hy} h^{(t)} + b_{hy} \\  \hat{y}^{(t)} = \text{softmax}(o^{(t)}) \\  \mathcal{L} = \sum_{t} \mathcal{L}^{(t)} = -\sum_{t} y^{(t)} \log \hat{y}^{(t)} \end{cases}</script><ul>
+\begin{cases}a^{(t)} = W_{xh} x^{(t)} + W_{hh} h^{(t-1)} + b_{xh} \\\\ h^{(t)} = f(a^{(t)}) \\\\  o^{(t)} = W_{hy} h^{(t)} + b_{hy} \\\\  \hat{y}^{(t)} = \text{softmax}(o^{(t)}) \\\\  \mathcal{L} = \sum_{t} \mathcal{L}^{(t)} = -\sum_{t} y^{(t)} \log \hat{y}^{(t)} \end{cases}</script><ul>
 <li>也就是说损失函数是所有时间步损失函数的累加和。</li>
 </ul>
 <h2 id="1-2-RNN的反向传播"><a href="#1-2-RNN的反向传播" class="headerlink" title="1.2 RNN的反向传播"></a><font size="3">1.2 RNN的反向传播</font></h2><p>&emsp;对于时刻$t$来说，参数$W<em>{hh}$和隐藏层在每个时刻$k, \; (1 \leqslant k \leqslant t)$的净输入$a_k$有关，于是得到第$t$时刻的损失函数关于$w</em>{hh}(i, j)$的梯度</p>
@@ -210,7 +210,7 @@
 </blockquote>
 <p>&emsp;定义<strong>误差项</strong>$\delta_{t, k} = \frac{\partial \mathcal{L}_t}{\partial a_k}$为第$t$时刻的损失对第$k$时刻隐层净输入$a_k$的导数，于是有：</p>
 <script type="math/tex; mode=display">
-\begin{align}\delta_{y, k} &= \frac{\partial \mathcal{L}_t}{\partial a_k} \\ &= \frac{\partial h_k}{\partial a_k} \frac{\partial a_{k+1}}{\partial h_k} \frac{\partial \mathcal{L}_t}{\partial a_{k+1}} \\ & = \text{diag}(f'(a_k)) W_{hh}^T \delta_{t, k+1} \end{align}</script><blockquote>
+\begin{align}\delta_{y, k} &= \frac{\partial \mathcal{L}_t}{\partial a_k} \\\\ &= \frac{\partial h_k}{\partial a_k} \frac{\partial a_{k+1}}{\partial h_k} \frac{\partial \mathcal{L}_t}{\partial a_{k+1}} \\\\ & = \text{diag}(f'(a_k)) W_{hh}^T \delta_{t, k+1} \end{align}</script><blockquote>
 <blockquote>
 <p><font color="red"><strong>注</strong></font> ：上式中，$\frac{\partial h_k}{\partial a_k}$可以看做是向量对向量的求导，就等于 <font color="red"><strong>$h_k$中的每一个元素对$a_k$这个向量求导</strong></font>，由于激活函数只与对应下标的元素相关，所以这里就等价于只有对角线元素有值，其余位置为0。</p>
 </blockquote>
@@ -235,7 +235,7 @@ $$
 同理可得，$\mathcal{L}$关于权重$W_{xh}$和偏置$b$的梯度：
 
 $$
-\frac{\partial \mathcal{L}}{\partial W_{xh}} = \sum_{t=1}^T \sum_{k=1}^t \delta_{t, k} x_k^T \\ \frac{\partial \mathcal{L}}{\partial b_{xh}} = \sum_{t=1}^T \sum_{k=1}^t \delta_{t, k}
+\frac{\partial \mathcal{L}}{\partial W_{xh}} = \sum_{t=1}^T \sum_{k=1}^t \delta_{t, k} x_k^T \\\\ \frac{\partial \mathcal{L}}{\partial b_{xh}} = \sum_{t=1}^T \sum_{k=1}^t \delta_{t, k}
 $$
 
 <br>
@@ -296,13 +296,13 @@ $$
 <p><br></p>
 <p>（3）计算公式归纳为：</p>
 <script type="math/tex; mode=display">
-\begin{bmatrix} \tilde{c}_t \\ o_t \\ i_t \\ f_t \end{bmatrix} = \begin{bmatrix} \tanh \\ \sigma \\ \sigma \\ \sigma \end{bmatrix} \bigg (W \begin{bmatrix} x_t \\ h_{t-1} \end{bmatrix} + b\bigg) \\ c_t = f_t \odot c_{t-1} + i_t \odot \tilde{c}_t \\ h_t = o_t \odot \tanh(c_t)</script><p>（4）LSTM中，记忆单元$c$可以在某个时刻步骤某个关键信息，并有能力将此关键信息保存一定的时间间隔。<strong>记忆单元$c$中保存的生命周期要长于短期记忆$h$，但是又远远短于短期记忆</strong>。</p>
+\begin{bmatrix} \tilde{c}_t \\\\ o_t \\\\ i_t \\\\ f_t \end{bmatrix} = \begin{bmatrix} \tanh \\\\ \sigma \\\\ \sigma \\\\ \sigma \end{bmatrix} \bigg (W \begin{bmatrix} x_t \\\\ h_{t-1} \end{bmatrix} + b\bigg) \\\\ c_t = f_t \odot c_{t-1} + i_t \odot \tilde{c}_t \\\\ h_t = o_t \odot \tanh(c_t)</script><p>（4）LSTM中，记忆单元$c$可以在某个时刻步骤某个关键信息，并有能力将此关键信息保存一定的时间间隔。<strong>记忆单元$c$中保存的生命周期要长于短期记忆$h$，但是又远远短于短期记忆</strong>。</p>
 <p>（5）一般DNN的参数初始化值都比较小，但是LSTM网络过小的值会使遗忘门的值比较小，这将导致前一时刻的信息大部分丢失，较难步骤长距离依赖。<strong>因此，遗忘门的参数初始值一般设得比较大，其偏置向量$b_f$设为1或2</strong>。</p>
 <hr>
 <h1 id="3-GRU"><a href="#3-GRU" class="headerlink" title="3. GRU"></a><font size="4">3. GRU</font></h1><p>（1）GRU不引入额外的记忆单元，而是在原始RNN的基础上增加一个<strong>更新门</strong>，<em>来控制当前状态需要从历史状态中保留多少信息，以及需要从候选状态中接受多少信息</em>。</p>
 <p>（2）公式为：</p>
 <script type="math/tex; mode=display">
-\begin{cases} z_t = \sigma(W_z x_t + U_z h_{t-1} + b_z) \\ r_t = \sigma(W_r x_t + U_r h_{t-1} + b_r) \\ \tilde{h}_t = \tanh(W_h x_t + U_h (r_t \odot h_{t-1}) + b_h) \\ h_t = z_t \odot h_{t-1} + (1-z_t) \odot \tilde{h}_t \end{cases}</script><p>（3）其中$z<em>t$表示更新门，决定<strong>当前状态需要从历史状态中保留多少信息，以及从候选状态中接受多少信息</strong>；$r_t$表示重置门，**用于控制候选状态$\tilde{h}_t$的计算是否依赖上一时刻的状态$h</em>{t-1}$**。</p>
+\begin{cases} z_t = \sigma(W_z x_t + U_z h_{t-1} + b_z) \\\\ r_t = \sigma(W_r x_t + U_r h_{t-1} + b_r) \\\\ \tilde{h}_t = \tanh(W_h x_t + U_h (r_t \odot h_{t-1}) + b_h) \\\\ h_t = z_t \odot h_{t-1} + (1-z_t) \odot \tilde{h}_t \end{cases}</script><p>（3）其中$z<em>t$表示更新门，决定<strong>当前状态需要从历史状态中保留多少信息，以及从候选状态中接受多少信息</strong>；$r_t$表示重置门，**用于控制候选状态$\tilde{h}_t$的计算是否依赖上一时刻的状态$h</em>{t-1}$**。</p>
 <p>（4）网络结构</p>
 <center>
 <img height="250" width="500" src="http://ww1.sinaimg.cn/large/006Ejijoly1g6fsubfvj9j30s00eq0us.jpg"> 
@@ -620,19 +620,19 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Machine Learning</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Deep Learning</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">深度学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Machine Learning</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -668,15 +668,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">编程</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
               </li>
             
             <div class="clearfix"></div>

@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Zessay的博客">
 <meta property="og:description" content="本文主要介绍了XGBoost的原理、推导过程，以及工程上的优化方法。同时还介绍了LightGBM在XGBoost基础上的优化。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-13T11:17:36.491Z">
+<meta property="og:updated_time" content="2019-09-13T13:47:40.550Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Machine Learning笔记——XGBoost &amp; LightGBM">
 <meta name="twitter:description" content="本文主要介绍了XGBoost的原理、推导过程，以及工程上的优化方法。同时还介绍了LightGBM在XGBoost基础上的优化。">
@@ -209,9 +209,9 @@ f(x) = w_q(x) \quad \Omega(f) = \gamma T + \frac{1}{2} \lambda ||w||^2</script><
 <script type="math/tex; mode=display">
 \tilde{\mathcal{L}}^{(t)} = \sum_{i=1}^n [g_i w_{q(x_i)} + \frac{1}{2} h_i w^2_{q(x_i)}] + \gamma T + \lambda \frac{1}{2} \sum_{j=1}^T w_j^2</script><p>定义每个叶节点$j$上的样本集合为$I_j = {i | q(x_i) = j }$，则目标函数可以写成按叶节点累加的形式：</p>
 <script type="math/tex; mode=display">
-\begin{align}\tilde{\mathcal{L}}^{(t)} &= \sum_{j=1}^T [(\sum_{i \in I_j} g_i) w_j + \frac{1}{2} (\sum_{i \in I_j} h_i + \lambda) w_j^2] + \gamma T \\ &= \sum_{j=1}^T [G_j w_j + \frac{1}{2} (H_j + \lambda )w_j^2] + \gamma T \end{align}</script><p>确定了树的结构，为了使目标函数最小，可以令其导数为0，解得每个叶节点的最优预测分数为：</p>
+\begin{align}\tilde{\mathcal{L}}^{(t)} &= \sum_{j=1}^T [(\sum_{i \in I_j} g_i) w_j + \frac{1}{2} (\sum_{i \in I_j} h_i + \lambda) w_j^2] + \gamma T \\\\ &= \sum_{j=1}^T [G_j w_j + \frac{1}{2} (H_j + \lambda )w_j^2] + \gamma T \end{align}</script><p>确定了树的结构，为了使目标函数最小，可以令其导数为0，解得每个叶节点的最优预测分数为：</p>
 <script type="math/tex; mode=display">
-w^*_j = -\frac{G_j}{H_j + \lambda} \Rightarrow \\ \tilde{\mathcal{L}}^* = -\frac{1}{2} \sum_{j=1}^T \frac{G_j^2}{H_j + \lambda} + \gamma T</script><p>上述公式中$\frac{G_j^2}{H_j + \lambda}$衡量了<strong>每个叶子节点对总体损失的贡献</strong>，希望损失越小越好，则对应的该值越大越好。</p>
+w^*_j = -\frac{G_j}{H_j + \lambda} \Rightarrow \\\\ \tilde{\mathcal{L}}^* = -\frac{1}{2} \sum_{j=1}^T \frac{G_j^2}{H_j + \lambda} + \gamma T</script><p>上述公式中$\frac{G_j^2}{H_j + \lambda}$衡量了<strong>每个叶子节点对总体损失的贡献</strong>，希望损失越小越好，则对应的该值越大越好。</p>
 <p>所以，对一个叶子节点进行分裂，分裂前后的增益定义为：</p>
 <script type="math/tex; mode=display">
 \text{Gain} = \frac{G_L^2}{ H_L + \lambda} + \frac{G_R^2}{H_R + \lambda} - \frac{(G_L + G_R)^2}{H_L + H_R + \lambda} - \gamma</script><p>（5）XGBoost第一次的输入是<code>(y, 0)</code>，接下来的输入就是前面预测值的和，比如第一棵树的预测结果是<code>update_pred</code>，那么<code>y_pred += update_pred</code>，之后的输入是<code>(y, y_pred)</code></p>
@@ -706,19 +706,19 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Machine Learning</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Deep Learning</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">深度学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Machine Learning</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -754,15 +754,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">编程</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
               </li>
             
             <div class="clearfix"></div>

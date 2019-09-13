@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Zessay的博客">
 <meta property="og:description" content="本文主要记录SGD，Momentum，AdaGrad以及Adam的更新公式以及理解的要点。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-13T11:17:36.495Z">
+<meta property="og:updated_time" content="2019-09-13T13:48:58.538Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Deep Learning笔记——从SGD到Adam">
 <meta name="twitter:description" content="本文主要记录SGD，Momentum，AdaGrad以及Adam的更新公式以及理解的要点。">
@@ -187,7 +187,7 @@ g_t = \sum_{i=1}^n \nabla_{\theta} f(\theta; x_i, y_i) + \nabla_{\theta} \phi(\t
 <h1 id="2-Momentum方法"><a href="#2-Momentum方法" class="headerlink" title="2. Momentum方法"></a><font size="4">2. Momentum方法</font></h1><p>（1）Momentum基于物理学中动量的概念，<strong>当前梯度好比当前时刻手里产生的加速度，前一次步伐好比前一时刻的速度，当前步伐好比当前时刻的速度</strong>。显然，当前时刻的速度$v<em>t$直接依赖于$v</em>{t-1}$和$g_t$.</p>
 <p>（2）参数更新公式</p>
 <script type="math/tex; mode=display">
-v_t = \gamma v_{t-1} + \eta g_t \\ \theta_{t+1} = \theta_t - v_t</script><ul>
+v_t = \gamma v_{t-1} + \eta g_t \\\\ \theta_{t+1} = \theta_t - v_t</script><ul>
 <li>衰减系数$\gamma$扮演者阻力的作用。</li>
 </ul>
 <h1 id="3-AdaGrad方法"><a href="#3-AdaGrad方法" class="headerlink" title="3. AdaGrad方法"></a><font size="4">3. AdaGrad方法</font></h1><p>（1）上述动量方法中惯性的获得是基于历史信息的，除了惯性，还希望梯度能够获得对周围环境的感知。所谓对环境的感知是指：<strong>在参数空间中，根据不同参数的一些经验性判断，自适应地确定参数的学习速率，不同参数的更新步幅是不同的</strong>。</p>
@@ -204,7 +204,7 @@ v_t = \gamma v_{t-1} + \eta g_t \\ \theta_{t+1} = \theta_t - v_t</script><ul>
 </ul>
 <p>（2）一阶矩和二阶矩采用类似于滑动窗口内求平均的思想进行融合，即当前梯度和近一段时间内的梯度的平均值，时间久远的梯度对当前平均值的贡献呈指数衰减。</p>
 <script type="math/tex; mode=display">
-m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_t \\ v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2</script><p>（3）Adam方法还考虑了$m_t, v_t$在零初始值情况下的偏置矫正。具体来说，Adam的更新公式为</p>
+m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_\\\\\\ v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2</script><p>（3）Adam方法还考虑了$m_t, v_t$在零初始值情况下的偏置矫正。具体来说，Adam的更新公式为</p>
 <script type="math/tex; mode=display">
 \theta_{t+1} = \theta_{t} - \frac{\eta \cdot \hat{m}_t}{\sqrt{\hat{v}_t + \epsilon}}</script><ul>
 <li>其中，$\hat{m}_t = \frac{m_t}{1 - \beta_1^t}, \; \hat{v}_t = \frac{v_t}{1 - \beta_2^t}$。</li>
@@ -528,19 +528,19 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Machine Learning</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Deep Learning</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">深度学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Machine Learning</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -576,15 +576,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">编程</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
               </li>
             
             <div class="clearfix"></div>

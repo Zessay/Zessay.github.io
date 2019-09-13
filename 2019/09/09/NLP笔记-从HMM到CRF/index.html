@@ -20,7 +20,7 @@
 <meta property="og:image" content="https://pic4.zhimg.com/80/v2-cb2cc25593fcaf06e682191d551ba03b_hd.jpg">
 <meta property="og:image" content="http://www.huaxiaozhuan.com/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0/imgs/PGM/chain_CRF.JPG">
 <meta property="og:image" content="https://pic1.zhimg.com/v2-376fd85a490e161978130ddd759244d4_r.jpg">
-<meta property="og:updated_time" content="2019-09-13T11:17:36.495Z">
+<meta property="og:updated_time" content="2019-09-13T13:50:23.959Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NLP笔记——从HMM到CRF">
 <meta name="twitter:description" content="本文主要记录了HMM、MEMM以及CRF的要点，详细的内容和推导见参考文献。">
@@ -221,7 +221,7 @@
 <p><img src="https://pic4.zhimg.com/80/v2-cb2cc25593fcaf06e682191d551ba03b_hd.jpg" alt="image"></p>
 <p>（3）和HMM不同，MEMM属于<strong>判别式模型</strong>，因此是对条件概率进行建模。有：</p>
 <script type="math/tex; mode=display">
-P_{\overset{\rightarrow}{w}}(i_t | i_{t-1}, o_t) = \frac{1}{Z_{\overset{\rightarrow}{w}}(i_{t-1}, o_t)} \exp \bigg( \sum_{k=1}^n w_k f_k(i_t, i_{t-1}, o_t) \bigg) \\ Z_{\overset{\rightarrow}{w}}(i_{t-1}, o_t) = \sum_{i_t} \exp \bigg( \sum_{i=1}^n w_i f_i (i_t, i_{t-1}, o_t) \bigg)</script><p>（4）<font color="blue"><strong>标记偏置问题</strong></font></p>
+P_{\overset{\rightarrow}{w}}(i_t | i_{t-1}, o_t) = \frac{1}{Z_{\overset{\rightarrow}{w}}(i_{t-1}, o_t)} \exp \bigg( \sum_{k=1}^n w_k f_k(i_t, i_{t-1}, o_t) \bigg) \\\\ Z_{\overset{\rightarrow}{w}}(i_{t-1}, o_t) = \sum_{i_t} \exp \bigg( \sum_{i=1}^n w_i f_i (i_t, i_{t-1}, o_t) \bigg)</script><p>（4）<font color="blue"><strong>标记偏置问题</strong></font></p>
 <blockquote>
 <p>计算$P<em>{\overset{\rightarrow}{w}}(i_t | i</em>{t-1}, o_t)$仅考虑局部归一化，它仅仅考虑制定位置的所有特征函数。所以<strong>MEMM倾向于选择拥有更少转移的状态</strong>。</p>
 </blockquote>
@@ -243,7 +243,7 @@ P(Y | X) = \frac{1}{Z} \exp \bigg( \sum_{j=1}^{K_1} \sum_{i=1}^{n-1} \lambda_j t
 </ul>
 <p>（5）简化形式：</p>
 <script type="math/tex; mode=display">
-P(Y|X) = \frac{1}{Z} \exp \bigg( \sum_{i=1}^K w_k f_k (Y, X) \bigg) \\ Z = \sum_{Y} \exp (\sum_{k=1}^K w_k f_k(Y, X))</script><ul>
+P(Y|X) = \frac{1}{Z} \exp \bigg( \sum_{i=1}^K w_k f_k (Y, X) \bigg) \\\\ Z = \sum_{Y} \exp (\sum_{k=1}^K w_k f_k(Y, X))</script><ul>
 <li>$Z$表示对所有可能的标记序列进行求和</li>
 </ul>
 <h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a><font size="4">4. 总结</font></h1><p>（1）模型图</p>
@@ -582,19 +582,19 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Machine Learning</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Deep Learning</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">深度学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Machine Learning</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -630,15 +630,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">编程</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
               </li>
             
             <div class="clearfix"></div>
