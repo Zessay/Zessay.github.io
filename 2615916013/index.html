@@ -179,23 +179,24 @@
       
         <p>本文主要记录SGD，Momentum，AdaGrad以及Adam的更新公式以及理解的要点。</p>
 <a id="more"></a>
+
 <h1 id="1-梯度下降法"><a href="#1-梯度下降法" class="headerlink" title="1. 梯度下降法"></a><font size="4">1. 梯度下降法</font></h1><p>（1）随机梯度下降法<code>SGD</code>每次只选择一个样本来估计当前梯度，即</p>
-<script type="math/tex; mode=display">
-g_t = \nabla_{\theta} f(\theta; x_i, y_i) + \nabla_{\theta} \phi(\theta)</script><p>（2）SGD每次只使用一个样本，信息量有限，梯度估计常常出现偏差，造成目标函数曲线收敛不稳定。为了避免这种情况，可以采用批量梯度下降法<code>BGD</code>，即</p>
-<script type="math/tex; mode=display">
-g_t = \sum_{i=1}^n \nabla_{\theta} f(\theta; x_i, y_i) + \nabla_{\theta} \phi(\theta)</script><p>（3）但是BGD每次采用所有数据的梯度，计算量大，这种的方法是每次选择部分数据，即<code>Mini-Batch</code>。</p>
-<h1 id="2-Momentum方法"><a href="#2-Momentum方法" class="headerlink" title="2. Momentum方法"></a><font size="4">2. Momentum方法</font></h1><p>（1）Momentum基于物理学中动量的概念，<strong>当前梯度好比当前时刻手里产生的加速度，前一次步伐好比前一时刻的速度，当前步伐好比当前时刻的速度</strong>。显然，当前时刻的速度$v<em>t$直接依赖于$v</em>{t-1}$和$g_t$.</p>
+<p>$$<br>g_t = \nabla_{\theta} f(\theta; x_i, y_i) + \nabla_{\theta} \phi(\theta)<br>$$</p>
+<p>（2）SGD每次只使用一个样本，信息量有限，梯度估计常常出现偏差，造成目标函数曲线收敛不稳定。为了避免这种情况，可以采用批量梯度下降法<code>BGD</code>，即</p>
+<p>$$<br>g_t = \sum_{i=1}^n \nabla_{\theta} f(\theta; x_i, y_i) + \nabla_{\theta} \phi(\theta)<br>$$</p>
+<p>（3）但是BGD每次采用所有数据的梯度，计算量大，这种的方法是每次选择部分数据，即<code>Mini-Batch</code>。</p>
+<h1 id="2-Momentum方法"><a href="#2-Momentum方法" class="headerlink" title="2. Momentum方法"></a><font size="4">2. Momentum方法</font></h1><p>（1）Momentum基于物理学中动量的概念，<strong>当前梯度好比当前时刻手里产生的加速度，前一次步伐好比前一时刻的速度，当前步伐好比当前时刻的速度</strong>。显然，当前时刻的速度$v_t$直接依赖于$v_{t-1}$和$g_t$.</p>
 <p>（2）参数更新公式</p>
-<script type="math/tex; mode=display">
-v_t = \gamma v_{t-1} + \eta g_t \\\\ \theta_{t+1} = \theta_t - v_t</script><ul>
+<p>$$<br>v_t = \gamma v_{t-1} + \eta g_t \\\ \theta_{t+1} = \theta_t - v_t<br>$$</p>
+<ul>
 <li>衰减系数$\gamma$扮演者阻力的作用。</li>
 </ul>
 <h1 id="3-AdaGrad方法"><a href="#3-AdaGrad方法" class="headerlink" title="3. AdaGrad方法"></a><font size="4">3. AdaGrad方法</font></h1><p>（1）上述动量方法中惯性的获得是基于历史信息的，除了惯性，还希望梯度能够获得对周围环境的感知。所谓对环境的感知是指：<strong>在参数空间中，根据不同参数的一些经验性判断，自适应地确定参数的学习速率，不同参数的更新步幅是不同的</strong>。</p>
 <p>&emsp;也就是说，我们希望：<strong>更新频率第的参数可以拥有较大的更新步幅，而更新频率高的参数的步幅可以减小</strong>。AdaGrad方法采用<strong>历史梯度平方和</strong>来衡量不同参数的梯度的稀疏性，取值越小表明越稀疏。</p>
 <p>（2）参数更新公式</p>
-<script type="math/tex; mode=display">
-\theta_{t+1, i} = \theta_{t,i} - \frac{\eta}{\sqrt{\sum_{k=0}^t g_{k,i}^2 + \epsilon}} g_{t, i}</script><ul>
-<li>$\theta<em>{t+1, i}$表示$(t+1)$时刻的参数向量$\theta</em>{t+1}$的第$i$个参数，$g_{k, i}$表示$k$时刻的梯度向量$g_k$的第$i$个维度。</li>
+<p>$$<br>\theta_{t+1, i} = \theta_{t,i} - \frac{\eta}{\sqrt{\sum_{k=0}^t g_{k,i}^2 + \epsilon}} g_{t, i}<br>$$</p>
+<ul>
+<li>$\theta_{t+1, i}$表示$(t+1)$时刻的参数向量$\theta_{t+1}$的第$i$个参数，$g_{k, i}$表示$k$时刻的梯度向量$g_k$的第$i$个维度。</li>
 </ul>
 <h1 id="4-Adam方法"><a href="#4-Adam方法" class="headerlink" title="4. Adam方法"></a><font size="4">4. Adam方法</font></h1><p>（1）Adam方法将惯性保持和环境感知两点集于一身。</p>
 <ul>
@@ -203,10 +204,10 @@ v_t = \gamma v_{t-1} + \eta g_t \\\\ \theta_{t+1} = \theta_t - v_t</script><ul>
 <li>另一方面，Adam还记录了梯度的<strong>二阶矩，即过往梯度平方和当前梯度平方的平均</strong>，这体现了环境感知的能力。</li>
 </ul>
 <p>（2）一阶矩和二阶矩采用类似于滑动窗口内求平均的思想进行融合，即当前梯度和近一段时间内的梯度的平均值，时间久远的梯度对当前平均值的贡献呈指数衰减。</p>
-<script type="math/tex; mode=display">
-m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_ t \\\\ v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2</script><p>（3）Adam方法还考虑了$m_t, v_t$在零初始值情况下的偏置矫正。具体来说，Adam的更新公式为</p>
-<script type="math/tex; mode=display">
-\theta_{t+1} = \theta_{t} - \frac{\eta \cdot \hat{m}_t}{\sqrt{\hat{v}_t + \epsilon}}</script><ul>
+<p>$$<br>m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_ t \\\ v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2<br>$$</p>
+<p>（3）Adam方法还考虑了$m_t, v_t$在零初始值情况下的偏置矫正。具体来说，Adam的更新公式为</p>
+<p>$$<br>\theta_{t+1} = \theta_{t} - \frac{\eta \cdot \hat{m}_t}{\sqrt{\hat{v}_t + \epsilon}}<br>$$</p>
+<ul>
 <li>其中，$\hat{m}_t = \frac{m_t}{1 - \beta_1^t}, \; \hat{v}_t = \frac{v_t}{1 - \beta_2^t}$。</li>
 </ul>
 <hr>
@@ -576,15 +577,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">编程</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
               </li>
             
             <div class="clearfix"></div>

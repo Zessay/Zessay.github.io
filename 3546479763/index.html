@@ -184,6 +184,7 @@
       
         <p>本文主要记录了HMM、MEMM以及CRF的要点，详细的内容和推导见参考文献。</p>
 <a id="more"></a>
+
 <h1 id="1-隐马尔可夫模型-HMM"><a href="#1-隐马尔可夫模型-HMM" class="headerlink" title="1. 隐马尔可夫模型 HMM"></a><font size="4">1. 隐马尔可夫模型 HMM</font></h1><p>（1）HMM的两个基本假设</p>
 <ul>
 <li><p><strong>齐次性假设</strong>：即假设隐藏的马尔可夫链在任意时刻$t$的状态只依赖与前一时刻的状态，与其他时刻的状态和观测无关，也与时刻$t$无关</p>
@@ -195,13 +196,13 @@
 <p><img src="https://pic4.zhimg.com/80/v2-d4077c2dbd9899d8896751a28490c9c7_hd.jpg" alt="HMM"></p>
 <p>（3）HMM的5个要素：</p>
 <ul>
-<li><p><strong>隐藏状态集$N$</strong>：$N = {q_1, \cdots, q_N}$，也就是说隐藏节点只能限定取包含在隐藏状态集中的符号。</p>
+<li><p><strong>隐藏状态集$N$</strong>：$N = \{q_1, \cdots, q_N\}$，也就是说隐藏节点只能限定取包含在隐藏状态集中的符号。</p>
 </li>
-<li><p><strong>观测集$M$</strong>：$M = {v_1, \cdots, v_M}$，观测节点的状态也只能限定取包含在观测状态集中的符号。</p>
+<li><p><strong>观测集$M$</strong>：$M = \{v_1, \cdots, v_M\}$，观测节点的状态也只能限定取包含在观测状态集中的符号。</p>
 </li>
-<li><p><strong>状态转移概率矩阵$A$</strong>：$A=[a<em>{ij}]</em>{N \times N}$（$N$为隐藏状态集元素个数），表示由一种隐藏状态到另一种隐藏状态的概率</p>
+<li><p><strong>状态转移概率矩阵$A$</strong>：$A=[a_{ij}]_{N \times N}$（$N$为隐藏状态集元素个数），表示由一种隐藏状态到另一种隐藏状态的概率</p>
 </li>
-<li><p><strong>观测概率矩阵$B$</strong> ：$B = [b<em>{ij}]</em>{N \times M}$，也称为发射概率，表示对于某一种隐藏状态，到各个观测状态的概率</p>
+<li><p><strong>观测概率矩阵$B$</strong> ：$B = [b_{ij}]_{N \times M}$，也称为发射概率，表示对于某一种隐藏状态，到各个观测状态的概率</p>
 </li>
 <li><p><strong>初始概率$\pi$</strong>：$\pi = [p_1, \cdots, p_N]$，表示第一个隐状态节点属于不同状态的概率。 </p>
 </li>
@@ -216,34 +217,34 @@
 </li>
 </ul>
 <p>（5）<strong>维特比算法</strong>：用动态规划来求解隐马尔科夫模型的解码问题。即用动态规划求解概率最大的路径（最优路径），这是一条路径对应着一个状态序列。</p>
-<h1 id="2-最大熵马尔可夫模型-MEMM"><a href="#2-最大熵马尔可夫模型-MEMM" class="headerlink" title="2. 最大熵马尔可夫模型 MEMM"></a><font size="4">2. 最大熵马尔可夫模型 MEMM</font></h1><p>（1）<strong>打破了HMM的观测独立性假设</strong>，它刻画的是<font color="red"><strong>在当前观察值$o<em>t$和前一个状态$i</em>{t-1}$的条件下，当前状态$i_{t}$的概率</strong></font>。</p>
+<h1 id="2-最大熵马尔可夫模型-MEMM"><a href="#2-最大熵马尔可夫模型-MEMM" class="headerlink" title="2. 最大熵马尔可夫模型 MEMM"></a><font size="4">2. 最大熵马尔可夫模型 MEMM</font></h1><p>（1）<strong>打破了HMM的观测独立性假设</strong>，它刻画的是<font color="red"><strong>在当前观察值$o_t$和前一个状态$i_{t-1}$的条件下，当前状态$i_{t}$的概率</strong></font>。</p>
 <p>（2）MEMM的模型图</p>
 <p><img src="https://pic4.zhimg.com/80/v2-cb2cc25593fcaf06e682191d551ba03b_hd.jpg" alt="image"></p>
 <p>（3）和HMM不同，MEMM属于<strong>判别式模型</strong>，因此是对条件概率进行建模。有：</p>
-<script type="math/tex; mode=display">
-P_{\overset{\rightarrow}{w}}(i_t | i_{t-1}, o_t) = \frac{1}{Z_{\overset{\rightarrow}{w}}(i_{t-1}, o_t)} \exp \bigg( \sum_{k=1}^n w_k f_k(i_t, i_{t-1}, o_t) \bigg) \\\\ Z_{\overset{\rightarrow}{w}}(i_{t-1}, o_t) = \sum_{i_t} \exp \bigg( \sum_{i=1}^n w_i f_i (i_t, i_{t-1}, o_t) \bigg)</script><p>（4）<font color="blue"><strong>标记偏置问题</strong></font></p>
+<p>$$<br>P_{\overset{\rightarrow}{w}}(i_t | i_{t-1}, o_t) = \frac{1}{Z_{\overset{\rightarrow}{w}}(i_{t-1}, o_t)} \exp \bigg( \sum_{k=1}^n w_k f_k(i_t, i_{t-1}, o_t) \bigg) \\\ Z_{\overset{\rightarrow}{w}}(i_{t-1}, o_t) = \sum_{i_t} \exp \bigg( \sum_{i=1}^n w_i f_i (i_t, i_{t-1}, o_t) \bigg)<br>$$</p>
+<p>（4）<font color="blue"><strong>标记偏置问题</strong></font></p>
 <blockquote>
-<p>计算$P<em>{\overset{\rightarrow}{w}}(i_t | i</em>{t-1}, o_t)$仅考虑局部归一化，它仅仅考虑制定位置的所有特征函数。所以<strong>MEMM倾向于选择拥有更少转移的状态</strong>。</p>
+<p>计算$P_{\overset{\rightarrow}{w}}(i_t | i_{t-1}, o_t)$仅考虑局部归一化，它仅仅考虑制定位置的所有特征函数。所以<strong>MEMM倾向于选择拥有更少转移的状态</strong>。</p>
 </blockquote>
 <h1 id="3-条件随机场-CRF"><a href="#3-条件随机场-CRF" class="headerlink" title="3. 条件随机场 CRF"></a><font size="4">3. 条件随机场 CRF</font></h1><p>（1）CRF同样是<strong>判别式模型</strong>，它在MEMM的基础上又打破了<strong>齐次性假设</strong>，即当前状态不仅与当前输入有关，还和之前或者之后的输入有关。</p>
 <p>（2）CRF模型图</p>
 <p><img src="http://www.huaxiaozhuan.com/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0/imgs/PGM/chain_CRF.JPG" alt="CRF"></p>
-<p>（3）给定观测变量序列$X = {X_1, X_2, \cdots, X_n}$，链式条件随机场主要包含两种关于标记变量的团</p>
+<p>（3）给定观测变量序列$X = \{X_1, X_2, \cdots, X_n\}$，链式条件随机场主要包含两种关于标记变量的团</p>
 <ul>
-<li>单个标记变量与$X$构成的团：${Y_i, X}, i=1, 2, \cdots, n$</li>
+<li>单个标记变量与$X$构成的团：$\{Y_i, X\}, i=1, 2, \cdots, n$</li>
 <li>相邻标记变量与$X$构成的团：${Y_{i-1}, Y_i, X}, i=2, \cdots, n$</li>
 </ul>
 <p>（4）CRF使用势函数和团来定义条件概率$P(Y|X)$，并引入特征函数，定义了条件概率</p>
-<script type="math/tex; mode=display">
-P(Y | X) = \frac{1}{Z} \exp \bigg( \sum_{j=1}^{K_1} \sum_{i=1}^{n-1} \lambda_j t_j(Y_i, Y_{i+1}, X, i) + \sum_{k=1}^{K_2} \sum_{i=1}^n \mu_k s_k(Y_i, X, i) \bigg)</script><ul>
-<li><p>$t<em>j(Y_i, Y</em>{i+1}, X, i)$表示：<strong>已知观测序列的情况下，两个相邻标记位置上的转移特征函数<code>transition feature function</code></strong></p>
+<p>$$<br>P(Y | X) = \frac{1}{Z} \exp \bigg( \sum_{j=1}^{K_1} \sum_{i=1}^{n-1} \lambda_j t_j(Y_i, Y_{i+1}, X, i) + \sum_{k=1}^{K_2} \sum_{i=1}^n \mu_k s_k(Y_i, X, i) \bigg)<br>$$</p>
+<ul>
+<li><p>$t_j(Y_i, Y_{i+1}, X, i)$表示：<strong>已知观测序列的情况下，两个相邻标记位置上的转移特征函数<code>transition feature function</code></strong></p>
 </li>
 <li><p>$s_k(Y_i, X, i)$表示：<strong>在一直观测序列的情况下，标记位置$i$上的状态特征函数<code>status feature function</code></strong> </p>
 </li>
 </ul>
 <p>（5）简化形式：</p>
-<script type="math/tex; mode=display">
-P(Y|X) = \frac{1}{Z} \exp \bigg( \sum_{i=1}^K w_k f_k (Y, X) \bigg) \\\\ Z = \sum_{Y} \exp (\sum_{k=1}^K w_k f_k(Y, X))</script><ul>
+<p>$$<br>P(Y|X) = \frac{1}{Z} \exp \bigg( \sum_{i=1}^K w_k f_k (Y, X) \bigg) \\\ Z = \sum_{Y} \exp (\sum_{k=1}^K w_k f_k(Y, X))<br>$$</p>
+<ul>
 <li>$Z$表示对所有可能的标记序列进行求和</li>
 </ul>
 <h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a><font size="4">4. 总结</font></h1><p>（1）模型图</p>
@@ -630,15 +631,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">编程</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
               </li>
             
             <div class="clearfix"></div>

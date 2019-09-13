@@ -184,125 +184,110 @@
       
         <p>本文主要记录了RNN前向传播和后向传播的推导过程，同时介绍了一下LSTM和GRU的原理及计算公式。</p>
 <a id="more"></a>
-<h1 id="1-RNN"><a href="#1-RNN" class="headerlink" title="1. RNN"></a><font size="4">1. RNN</font></h1><h2 id="1-1-RNN的前向传播"><a href="#1-1-RNN的前向传播" class="headerlink" title="1.1 RNN的前向传播"></a><font size="3">1.1 RNN的前向传播</font></h2><p><br></p>
+
+<h1 id="1-RNN"><a href="#1-RNN" class="headerlink" title="1. RNN"></a><font size="4">1. RNN</font></h1><h2 id="1-1-RNN的前向传播"><a href="#1-1-RNN的前向传播" class="headerlink" title="1.1 RNN的前向传播"></a><font size="3">1.1 RNN的前向传播</font></h2><br>
 <center>
 <img width="300" height="200" src="http://ww1.sinaimg.cn/large/006Ejijoly1g6fr38av58j30cs08mmxq.jpg">
 </center>
 
-<p><br><br>&emsp;设RNN从输入层到隐层的参数矩阵为$W<em>{xh}$，从上一个时间步到下一个时间步的隐层参数矩阵为$W</em>{hh}$，从当前时间步隐层结果到输出层结果的参数矩阵为$W_{hy}$；输出层的激活函数为$\text{softmax}$，损失函数为$\text{crossEntropy}$。于是得到下面公式：</p>
-<script type="math/tex; mode=display">
-\begin{cases}a^{(t)} = W_{xh} x^{(t)} + W_{hh} h^{(t-1)} + b_{xh} \\\\ h^{(t)} = f(a^{(t)}) \\\\  o^{(t)} = W_{hy} h^{(t)} + b_{hy} \\\\  \hat{y}^{(t)} = \text{softmax}(o^{(t)}) \\\\  \mathcal{L} = \sum_{t} \mathcal{L}^{(t)} = -\sum_{t} y^{(t)} \log \hat{y}^{(t)} \end{cases}</script><ul>
+<br>
+&emsp;设RNN从输入层到隐层的参数矩阵为$W_{xh}$，从上一个时间步到下一个时间步的隐层参数矩阵为$W_{hh}$，从当前时间步隐层结果到输出层结果的参数矩阵为$W_{hy}$；输出层的激活函数为$\text{softmax}$，损失函数为$\text{crossEntropy}$。于是得到下面公式：
+
+<p>$$<br>\begin{cases}a^{(t)} = W_{xh} x^{(t)} + W_{hh} h^{(t-1)} + b_{xh} \\\ h^{(t)} = f(a^{(t)}) \\\  o^{(t)} = W_{hy} h^{(t)} + b_{hy} \\\  \hat{y}^{(t)} = \text{softmax}(o^{(t)}) \\\  \mathcal{L} = \sum_{t} \mathcal{L}^{(t)} = -\sum_{t} y^{(t)} \log \hat{y}^{(t)} \end{cases}<br>$$</p>
+<ul>
 <li>也就是说损失函数是所有时间步损失函数的累加和。</li>
 </ul>
-<h2 id="1-2-RNN的反向传播"><a href="#1-2-RNN的反向传播" class="headerlink" title="1.2 RNN的反向传播"></a><font size="3">1.2 RNN的反向传播</font></h2><p>&emsp;对于时刻$t$来说，参数$W<em>{hh}$和隐藏层在每个时刻$k, \; (1 \leqslant k \leqslant t)$的净输入$a_k$有关，于是得到第$t$时刻的损失函数关于$w</em>{hh}(i, j)$的梯度</p>
-<script type="math/tex; mode=display">
-\frac{\partial \mathcal{L}_t}{\partial w_{hh}(i, j)} = \sum_{k=1}^t \frac{\partial a_k}{\partial w_{hh}(i, j)} \frac{\partial \mathcal{L}_t}{\partial a_k}</script><blockquote>
+<h2 id="1-2-RNN的反向传播"><a href="#1-2-RNN的反向传播" class="headerlink" title="1.2 RNN的反向传播"></a><font size="3">1.2 RNN的反向传播</font></h2><p>&emsp;对于时刻$t$来说，参数$W_{hh}$和隐藏层在每个时刻$k, \; (1 \leqslant k \leqslant t)$的净输入$a_k$有关，于是得到第$t$时刻的损失函数关于$w_{hh}(i, j)$的梯度</p>
+<p>$$<br>\frac{\partial \mathcal{L}<em>t}{\partial w</em>{hh}(i, j)} = \sum_{k=1}^t \frac{\partial a_k}{\partial w_{hh}(i, j)} \frac{\partial \mathcal{L}_t}{\partial a_k}<br>$$</p>
+<blockquote>
 <p>将上式分为两部分求解，首先计算第一部分</p>
 </blockquote>
-<p>&emsp;在$a<em>k = W</em>{xh} x<em>k + W</em>{hh} h<em>{k-1} + b$中保持$h</em>{k-1}$不变，于是对$W_{hh}(i, j)$求导可得：</p>
-<script type="math/tex; mode=display">
-\frac{\partial a_k}{\partial W_{hh}(i, j)} = [0, \cdots, [h_{k-1}]_j, \cdots, 0]</script><ul>
+<p>&emsp;在$a_k = W_{xh} x_k + W_{hh} h_{k-1} + b$中保持$h_{k-1}$不变，于是对$W_{hh}(i, j)$求导可得：</p>
+<p>$$<br>\frac{\partial a_k}{\partial W_{hh}(i, j)} = [0, \cdots, [h_{k-1}]_j, \cdots, 0]<br>$$</p>
+<ul>
 <li>也就是说，只有$h_{k-1}$的第$j$个位置上的元素有值，其余为0的向量。</li>
 </ul>
-<p><br></p>
+<br>
+
 <blockquote>
 <p>接着，计算第二部分</p>
 </blockquote>
 <p>&emsp;定义<strong>误差项</strong>$\delta_{t, k} = \frac{\partial \mathcal{L}_t}{\partial a_k}$为第$t$时刻的损失对第$k$时刻隐层净输入$a_k$的导数，于是有：</p>
-<script type="math/tex; mode=display">
-\begin{align}\delta_{y, k} &= \frac{\partial \mathcal{L}_t}{\partial a_k} \\\\ &= \frac{\partial h_k}{\partial a_k} \frac{\partial a_{k+1}}{\partial h_k} \frac{\partial \mathcal{L}_t}{\partial a_{k+1}} \\\\ & = \text{diag}(f'(a_k)) W_{hh}^T \delta_{t, k+1} \end{align}</script><blockquote>
+<p>$$<br>\begin{align}\delta_{y, k} &amp;= \frac{\partial \mathcal{L}<em>t}{\partial a_k} \\\ &amp;= \frac{\partial h_k}{\partial a_k} \frac{\partial a</em>{k+1}}{\partial h_k} \frac{\partial \mathcal{L}<em>t}{\partial a</em>{k+1}} \\\ &amp; = \text{diag}(f’(a_k)) W_{hh}^T \delta_{t, k+1} \end{align}<br>$$</p>
+<blockquote>
 <blockquote>
 <p><font color="red"><strong>注</strong></font> ：上式中，$\frac{\partial h_k}{\partial a_k}$可以看做是向量对向量的求导，就等于 <font color="red"><strong>$h_k$中的每一个元素对$a_k$这个向量求导</strong></font>，由于激活函数只与对应下标的元素相关，所以这里就等价于只有对角线元素有值，其余位置为0。</p>
 </blockquote>
 </blockquote>
 <p>&emsp;将上面计算得到的两个部分汇总，并写成矩阵形式，得到：</p>
-<script type="math/tex; mode=display">
-\frac{\partial \mathcal{L}_t}{\partial W_{hh}} = \sum_{k=1}^t \delta_{t, k} h^T_{k-1}</script><ul>
+<p>$$<br>\frac{\partial \mathcal{L}<em>t}{\partial W</em>{hh}} = \sum_{k=1}^t \delta_{t, k} h^T_{k-1}<br>$$</p>
+<ul>
 <li>也就是说，<strong>当前时间点的误差会沿着时间线往前传播，对参数产生作用</strong>；形象化的表示如图所示：</li>
 </ul>
-<p><br></p>
+<br>
 <center>
 <img width="500" height="250" src="http://ww1.sinaimg.cn/large/006Ejijoly1g6fqqao0s9j30ow09ujs1.jpg">
 </center>
 <br>
 
-最终得到整个序列的损失函数$\mathcal{L}$关于参数$W_{hh}$的梯度
-
-$$
-\frac{\partial \mathcal{L}}{\partial W_{hh}} = \sum_{t=1}^T \sum_{k=1}^t \delta_{t, k} h^T_{k-1}
-$$
-
-同理可得，$\mathcal{L}$关于权重$W_{xh}$和偏置$b$的梯度：
-
-$$
-\frac{\partial \mathcal{L}}{\partial W_{xh}} = \sum_{t=1}^T \sum_{k=1}^t \delta_{t, k} x_k^T \\\\ \frac{\partial \mathcal{L}}{\partial b_{xh}} = \sum_{t=1}^T \sum_{k=1}^t \delta_{t, k}
-$$
-
+<p>最终得到整个序列的损失函数$\mathcal{L}$关于参数$W_{hh}$的梯度</p>
+<p>$$<br>\frac{\partial \mathcal{L}}{\partial W_{hh}} = \sum_{t=1}^T \sum_{k=1}^t \delta_{t, k} h^T_{k-1}<br>$$</p>
+<p>同理可得，$\mathcal{L}$关于权重$W_{xh}$和偏置$b$的梯度：</p>
+<p>$$<br>\frac{\partial \mathcal{L}}{\partial W_{xh}} = \sum_{t=1}^T \sum_{k=1}^t \delta_{t, k} x_k^T \\\ \frac{\partial \mathcal{L}}{\partial b_{xh}} = \sum_{t=1}^T \sum_{k=1}^t \delta_{t, k}<br>$$</p>
 <br>
 
-## <font size="3">1.3 梯度消失和梯度爆炸</font>
-
-（1）在BPTT算法中，误差项的展开式为：
-
-$$
-\delta_{t, k} = \prod_{\tau = k}^{t-1} (\text{diag}(f'(a_{\tau})) W_{hh}^T) \delta_{t, t}
-$$
-
-- 定义$\gamma \cong ||\text{diag}(f'(a_{\tau}))W_{hh}^T||$，那么：
-
-$$
-\delta_{t, k} \cong \gamma^{t-k} \delta_{t, t}
-$$
-
-> 如果$\gamma > 1$，当$t-k \rightarrow \infty$时，$\gamma^{t-k} \rightarrow \infty$，出现 <font color="red">**梯度爆炸**</font>；如果$\gamma < 1$，则$\gamma^{t-k} \rightarrow 0$，会出现 <font color="red">**梯度消失**</font>。也就是说，实际上的梯度小时或者梯度爆炸是指$\frac{\partial \mathcal{L}}{\partial a_k}$出现了梯度消失或者爆炸，**此时，参数$W_{hh}$的更新就主要依靠当前时刻和几个相邻时刻的状态$h_k$，长距离的状态对$W_{hh}$没有影响**。
-
-
-（2）由于RNN通常使用`tanh`作为激活函数，导数值小于`1`，并且权值矩阵$||W_{hh}||$也不会太大，所以当时间间隔$t-k$过大时，$\delta_{t, k}$会趋向于0，经常会出现梯度消失的问题。
-
-（3）改进方法：
-
-> **梯度爆炸问题**：经过使用**梯度衰减或者梯度截断**。
-
-
-
-> **梯度消失问题**：这是RNN的主要问题，可以修改隐层状态更新公式为$h_{t} = h_{t-1} + g(x_t, h_{t-1}; \theta)$；但这样又会引发梯度爆炸和记忆饱和的问题。
-
----
-
-# <font size="4">2. LSTM</font>
-
-（1）LSTM引入了**门控机制**来控制信息传递的路径，分为**输入门$i_t$，遗忘门$f_t$，输出门 $o_t$** :
-
-- 遗忘门$f_t$通过控制上一时刻的内部状态$c_{t-1}$决定需要遗忘多少信息；
-
-- 输入门$i_t$控制当前时刻的候选状态$\tilde{c}_t$决定需要保存多少信息；
-
-- 输出门$o_t$控制当前时刻的内部状态$c_t$决定输出多少信息给外部状态$h_t$。
-
-&emsp;当$f_t=0, \; i_t=1$时，记忆单元将历史信息清空，并将候选状态向量$\tilde{c}_t$写入；当$f_t=1, i_t=0$时，记忆单元将复制上一时刻的内容，不写入新的信息。
-
-（2）计算过程：
-
-- 首先，利用上一时刻的外部状态$h_{t-1}$和当前时刻的输入$x_t$，计算出三个门以及候选状态$\tilde{c}_t$；
-
-- 结合遗忘门$f_t$和输入门$i_t$ 来更新记忆单元$c_t$；
-
-- 结合输出门$o_t$，将内部状态信息传递给外部状态$h$。
-
+<h2 id="1-3-梯度消失和梯度爆炸"><a href="#1-3-梯度消失和梯度爆炸" class="headerlink" title="1.3 梯度消失和梯度爆炸"></a><font size="3">1.3 梯度消失和梯度爆炸</font></h2><p>（1）在BPTT算法中，误差项的展开式为：</p>
+<p>$$<br>\delta_{t, k} = \prod_{\tau = k}^{t-1} (\text{diag}(f’(a_{\tau})) W_{hh}^T) \delta_{t, t}<br>$$</p>
+<ul>
+<li>定义$\gamma \cong ||\text{diag}(f’(a_{\tau}))W_{hh}^T||$，那么：</li>
+</ul>
+<p>$$<br>\delta_{t, k} \cong \gamma^{t-k} \delta_{t, t}<br>$$</p>
+<blockquote>
+<p>如果$\gamma &gt; 1$，当$t-k \rightarrow \infty$时，$\gamma^{t-k} \rightarrow \infty$，出现 <font color="red"><strong>梯度爆炸</strong></font>；如果$\gamma &lt; 1$，则$\gamma^{t-k} \rightarrow 0$，会出现 <font color="red"><strong>梯度消失</strong></font>。也就是说，实际上的梯度小时或者梯度爆炸是指$\frac{\partial \mathcal{L}}{\partial a_k}$出现了梯度消失或者爆炸，<strong>此时，参数$W_{hh}$的更新就主要依靠当前时刻和几个相邻时刻的状态$h_k$，长距离的状态对$W_{hh}$没有影响</strong>。</p>
+</blockquote>
+<p>（2）由于RNN通常使用<code>tanh</code>作为激活函数，导数值小于<code>1</code>，并且权值矩阵$||W_{hh}||$也不会太大，所以当时间间隔$t-k$过大时，$\delta_{t, k}$会趋向于0，经常会出现梯度消失的问题。</p>
+<p>（3）改进方法：</p>
+<blockquote>
+<p><strong>梯度爆炸问题</strong>：经过使用<strong>梯度衰减或者梯度截断</strong>。</p>
+</blockquote>
+<blockquote>
+<p><strong>梯度消失问题</strong>：这是RNN的主要问题，可以修改隐层状态更新公式为$h_{t} = h_{t-1} + g(x_t, h_{t-1}; \theta)$；但这样又会引发梯度爆炸和记忆饱和的问题。</p>
+</blockquote>
+<hr>
+<h1 id="2-LSTM"><a href="#2-LSTM" class="headerlink" title="2. LSTM"></a><font size="4">2. LSTM</font></h1><p>（1）LSTM引入了<strong>门控机制</strong>来控制信息传递的路径，分为<strong>输入门$i_t$，遗忘门$f_t$，输出门 $o_t$</strong> :</p>
+<ul>
+<li><p>遗忘门$f_t$通过控制上一时刻的内部状态$c_{t-1}$决定需要遗忘多少信息；</p>
+</li>
+<li><p>输入门$i_t$控制当前时刻的候选状态$\tilde{c}_t$决定需要保存多少信息；</p>
+</li>
+<li><p>输出门$o_t$控制当前时刻的内部状态$c_t$决定输出多少信息给外部状态$h_t$。</p>
+</li>
+</ul>
+<p>&emsp;当$f_t=0, \; i_t=1$时，记忆单元将历史信息清空，并将候选状态向量$\tilde{c}_t$写入；当$f_t=1, i_t=0$时，记忆单元将复制上一时刻的内容，不写入新的信息。</p>
+<p>（2）计算过程：</p>
+<ul>
+<li><p>首先，利用上一时刻的外部状态$h_{t-1}$和当前时刻的输入$x_t$，计算出三个门以及候选状态$\tilde{c}_t$；</p>
+</li>
+<li><p>结合遗忘门$f_t$和输入门$i_t$ 来更新记忆单元$c_t$；</p>
+</li>
+<li><p>结合输出门$o_t$，将内部状态信息传递给外部状态$h$。</p>
+</li>
+</ul>
 <center>
 <img height="250" width="500" src="http://ww1.sinaimg.cn/large/006Ejijoly1g6fs147e20j30so0dwtal.jpg">
 </center>
 
-<p><br></p>
+<br>
+
 <p>（3）计算公式归纳为：</p>
-<script type="math/tex; mode=display">
-\begin{bmatrix} \tilde{c}_t \\\\ o_t \\\\ i_t \\\\ f_t \end{bmatrix} = \begin{bmatrix} \tanh \\\\ \sigma \\\\ \sigma \\\\ \sigma \end{bmatrix} \bigg (W \begin{bmatrix} x_t \\\\ h_{t-1} \end{bmatrix} + b\bigg) \\\\ c_t = f_t \odot c_{t-1} + i_t \odot \tilde{c}_t \\\\ h_t = o_t \odot \tanh(c_t)</script><p>（4）LSTM中，记忆单元$c$可以在某个时刻步骤某个关键信息，并有能力将此关键信息保存一定的时间间隔。<strong>记忆单元$c$中保存的生命周期要长于短期记忆$h$，但是又远远短于短期记忆</strong>。</p>
+<p>$$<br>\begin{bmatrix} \tilde{c}<em>t \\\ o_t \\\ i_t \\\ f_t \end{bmatrix} = \begin{bmatrix} \tanh \\\ \sigma \\\ \sigma \\\ \sigma \end{bmatrix} \bigg (W \begin{bmatrix} x_t \\\ h</em>{t-1} \end{bmatrix} + b\bigg) \\\ c_t = f_t \odot c_{t-1} + i_t \odot \tilde{c}_t \\\ h_t = o_t \odot \tanh(c_t)<br>$$</p>
+<p>（4）LSTM中，记忆单元$c$可以在某个时刻步骤某个关键信息，并有能力将此关键信息保存一定的时间间隔。<strong>记忆单元$c$中保存的生命周期要长于短期记忆$h$，但是又远远短于短期记忆</strong>。</p>
 <p>（5）一般DNN的参数初始化值都比较小，但是LSTM网络过小的值会使遗忘门的值比较小，这将导致前一时刻的信息大部分丢失，较难步骤长距离依赖。<strong>因此，遗忘门的参数初始值一般设得比较大，其偏置向量$b_f$设为1或2</strong>。</p>
 <hr>
 <h1 id="3-GRU"><a href="#3-GRU" class="headerlink" title="3. GRU"></a><font size="4">3. GRU</font></h1><p>（1）GRU不引入额外的记忆单元，而是在原始RNN的基础上增加一个<strong>更新门</strong>，<em>来控制当前状态需要从历史状态中保留多少信息，以及需要从候选状态中接受多少信息</em>。</p>
 <p>（2）公式为：</p>
-<script type="math/tex; mode=display">
-\begin{cases} z_t = \sigma(W_z x_t + U_z h_{t-1} + b_z) \\\\ r_t = \sigma(W_r x_t + U_r h_{t-1} + b_r) \\\\ \tilde{h}_t = \tanh(W_h x_t + U_h (r_t \odot h_{t-1}) + b_h) \\\\ h_t = z_t \odot h_{t-1} + (1-z_t) \odot \tilde{h}_t \end{cases}</script><p>（3）其中$z<em>t$表示更新门，决定<strong>当前状态需要从历史状态中保留多少信息，以及从候选状态中接受多少信息</strong>；$r_t$表示重置门，**用于控制候选状态$\tilde{h}_t$的计算是否依赖上一时刻的状态$h</em>{t-1}$**。</p>
+<p>$$<br>\begin{cases} z_t = \sigma(W_z x_t + U_z h_{t-1} + b_z) \\\ r_t = \sigma(W_r x_t + U_r h_{t-1} + b_r) \\\ \tilde{h}<em>t = \tanh(W_h x_t + U_h (r_t \odot h</em>{t-1}) + b_h) \\\ h_t = z_t \odot h_{t-1} + (1-z_t) \odot \tilde{h}_t \end{cases}<br>$$</p>
+<p>（3）其中$z_t$表示更新门，决定<strong>当前状态需要从历史状态中保留多少信息，以及从候选状态中接受多少信息</strong>；$r_t$表示重置门，<strong>用于控制候选状态$\tilde{h}<em>t$的计算是否依赖上一时刻的状态$h</em>{t-1}$</strong>。</p>
 <p>（4）网络结构</p>
 <center>
 <img height="250" width="500" src="http://ww1.sinaimg.cn/large/006Ejijoly1g6fsubfvj9j30s00eq0us.jpg"> 
@@ -473,7 +458,7 @@ $$
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-RNN"><span class="toc-number">1.</span> <span class="toc-text">1. RNN</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-RNN的前向传播"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 RNN的前向传播</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-RNN的反向传播"><span class="toc-number">1.2.</span> <span class="toc-text">1.2 RNN的反向传播</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-GRU"><span class="toc-number">2.</span> <span class="toc-text">3. GRU</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-RNN"><span class="toc-number">1.</span> <span class="toc-text">1. RNN</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-RNN的前向传播"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 RNN的前向传播</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-RNN的反向传播"><span class="toc-number">1.2.</span> <span class="toc-text">1.2 RNN的反向传播</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-梯度消失和梯度爆炸"><span class="toc-number">1.3.</span> <span class="toc-text">1.3 梯度消失和梯度爆炸</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-LSTM"><span class="toc-number">2.</span> <span class="toc-text">2. LSTM</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-GRU"><span class="toc-number">3.</span> <span class="toc-text">3. GRU</span></a></li></ol>
                     </div>
                 </span>
             </div>
@@ -668,15 +653,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">编程</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
               </li>
             
             <div class="clearfix"></div>
