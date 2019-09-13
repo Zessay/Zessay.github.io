@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="utf-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -32,7 +32,7 @@
     #container.show {
       background: linear-gradient(200deg,#a0cfe4,#e8c37e);
     }
-  </style>
+  </style><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
   
@@ -40,7 +40,7 @@
 </head>
 </html>
 <body>
-  <div id="container" q-class="show:isCtnShow">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
     <div class="left-col" q-class="show:isShow">
       
@@ -179,7 +179,6 @@
       
         <p>&emsp;本文主要记录了关于FastText论文的内容，与Word2Vec的不同点以及一些工程上的优化。</p>
 <a id="more"></a>
-
 <h1 id="1-fastText原理"><a href="#1-fastText原理" class="headerlink" title="1. fastText原理"></a><font size="4">1. fastText原理</font></h1><p>（1）fastText的模型架构和word2vec中的CBOW非常相似，不同的是：fastText预测标签而CBOW预测的是中间词，即<strong>模型架构类似但是模型的任务不同</strong>。</p>
 <p>（2）相比word2vec来说，fastText增加了<code>subword</code>特征。word2vec仅使用词信息，这样使得词之间的共享信息很少，这对于低频词来说更严重，如果出现<code>OOV</code>问题，新词不能利用词库中词的信息。<strong>fastText增加了<code>subword</code>信息，将词做进一步拆分</strong>。</p>
 <p>&emsp;通过加入<code>subword</code>，即便出现OOV问题，也能共享高频词的subword信息。在fastText中，引入了两类特征：</p>
@@ -201,8 +200,6 @@
 <p>（4）FastText的思考：</p>
 <blockquote>
 <p>对于文本分类等偏线性的数据集，复杂的深层网络相对于浅层网络来说，优势并不明显，深度学习可能容易过拟合，而浅层网络的泛化能力更好。但也不是说浅层的方法一定比深层的好，这是由数据集决定的。</p>
-</blockquote>
-<blockquote>
 <p>除了数据本身，数据量的大小很大程度上决定了方法的选择。<strong>对于小规模的数据集，浅层模型就可以了；随着数据量的增加，深度模型的优势就体现出来了。</strong></p>
 </blockquote>
 <hr>
@@ -728,5 +725,38 @@ MathJax.Hub.Queue(function() {
 
 </div>
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
 </body>
 </html>

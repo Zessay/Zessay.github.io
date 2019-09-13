@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="utf-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -32,7 +32,7 @@
     #container.show {
       background: linear-gradient(200deg,#a0cfe4,#e8c37e);
     }
-  </style>
+  </style><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
   
@@ -40,7 +40,7 @@
 </head>
 </html>
 <body>
-  <div id="container" q-class="show:isCtnShow">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
     <div class="left-col" q-class="show:isShow">
       
@@ -179,7 +179,6 @@
       
         <p>&emsp;本文主要记录了关于GloVe和CoVe两篇论文的主要内容。</p>
 <a id="more"></a>
-
 <h1 id="1-关于Glove"><a href="#1-关于Glove" class="headerlink" title="1. 关于Glove"></a><font size="4">1. 关于Glove</font></h1><p>（1）Glove全称Global Vectors for Word Representation，是一个<strong>基于全局词频统计的词表征</strong>工具，可以把一个单词表达成一个由实数组成的向量。</p>
 <p>（2）传统的词向量表示方法有两种：</p>
 <ul>
@@ -190,33 +189,37 @@
 <h2 id="1-1-共现概率矩阵"><a href="#1-1-共现概率矩阵" class="headerlink" title="1.1  共现概率矩阵"></a><font size="3">1.1  共现概率矩阵</font></h2><p>（1）我们定义几个符号：</p>
 <ul>
 <li>$X_{ij}$表示语料中出现单词<code>i</code>的上下文中出现单词<code>j</code>的次数；</li>
-<li>$X_i = \sum_{k} X_{ik}$ 表示出现单词<code>i</code>上下文所有单词的总次数；</li>
-<li>$P_{ij} = P{j|i} = \frac{X_{ij}}{X_i}$表示单词<code>j</code>出现在单词<code>i</code>上下文的概率</li>
+<li>$X<em>i = \sum</em>{k} X_{ik}$ 表示出现单词<code>i</code>上下文所有单词的总次数；</li>
+<li>$P<em>{ij} = P{j|i} = \frac{X</em>{ij}}{X_i}$表示单词<code>j</code>出现在单词<code>i</code>上下文的概率</li>
 </ul>
-<p>（2）对于两个不同的中心词<code>ice</code>和<code>steam</code>，我们单纯的比较<code>solid</code>和<code>gas</code>等词在其上下文出现的概率值，由于绝对数值都比较小，所有很难有直观的感受。于是定义了<strong>共现概率$Ratio = \frac{P_{ik}}{P_{jk}}$</strong>；概率值越大说明单词<code>k</code>和<code>i</code>的相关程度比和<code>j</code>的相关程度越高，概率值越小说明和<code>j</code>的相关程度越高，概率值接近于<code>1</code>说明无法区分对两者的相关性。</p>
-<p>（3）不妨设单词<code>i, j, k</code>的词向量$w_i, w_j, w_k$，这3个向量通过魔偶中函数的作用后所呈现出来的规律和$Ratio = \frac{P_{ik}}{P_{jk}}$具有一致性，即相等，也可以认为<strong>词向量中包含了共现概率矩阵的信息</strong>。</p>
-<p>（4）定义该未知函数是$F$，则<br>$$<br>F(w_i,w_j, w_k) = \frac{P_{ik}}{P_{jk}}<br>$$</p>
-<h2 id="1-2-模型推导"><a href="#1-2-模型推导" class="headerlink" title="1.2  模型推导"></a><font size="3">1.2  模型推导</font></h2><p>（1）右侧的$\frac{P_{ik}}{P_{jk}}$是我们模型要求的两，左侧的$w_k, w_i, w_j$是我们要求的量，同时函数$F$是未知的。</p>
-<p>（2）$\frac{P_{ik}}{P_{jk}}$考察了<code>i, j, k</code>3个单词两两之间的相似关系，不妨单独考察<code>i, j</code>两个词和它们的词向量<code>$w_i, w_j$</code>，线性空间中的相似关系自然联想到两个向量的差$(v_i - v_j)$，所以函数$F$形式有</p>
-<p>$$<br>F(w_i - w_j, w_k) = \frac{P_{ik}}{P_{jk}}<br>$$</p>
-<p>（3）上面等式右侧是一个标量，而F是作用在两个向量上的，想来那个和标量之间的关系自然想到使用<strong>内积</strong>，所以$F$函数的形式进一步转化为</p>
-<p>$$<br>F((w_i - w_j)^T w_k) = F(w_i^T w_k - w_j^T w_k) = \frac{P_{ik}}{P_{jk}}<br>$$</p>
-<p>（4）上述等式的左侧是差，右侧是商，可以通过将$F$取<code>exp</code>将差和商关联起来</p>
-<p>$$<br>\exp(w_i^T w_k - w_j^T w_k) = \frac{\exp(w_i^T w_k)}{\exp(w_j^T w_k)} = \frac{P_{ik}}{P_{jk}}<br>$$</p>
-<p>（5）所以只要让分子和分母的等式能够成立即可，在整个文本库考察$\exp(w_i^Tw_k) = P_{ik} = \frac{X_{ik}}{X_i} $，即$w_i^T w_k = \log X_{ik} - \log X_i$</p>
-<p>（6）等式的左侧是向量的内积，交换次序不改变结果；但是右侧交换顺序则不成立；为了解决<strong>对称性</strong>问题，引入了两个偏置项$b_i, b_k$，模型变为<br>$$<br>\log X_{ik} = w_i^T w_k + b_i + b_k<br>$$<br>其中$b_i$中包含了$\log X_k$</p>
+<p>（2）对于两个不同的中心词<code>ice</code>和<code>steam</code>，我们单纯的比较<code>solid</code>和<code>gas</code>等词在其上下文出现的概率值，由于绝对数值都比较小，所有很难有直观的感受。于是定义了<strong>共现概率$Ratio = \frac{P<em>{ik}}{P</em>{jk}}$</strong>；概率值越大说明单词<code>k</code>和<code>i</code>的相关程度比和<code>j</code>的相关程度越高，概率值越小说明和<code>j</code>的相关程度越高，概率值接近于<code>1</code>说明无法区分对两者的相关性。</p>
+<p>（3）不妨设单词<code>i, j, k</code>的词向量$w<em>i, w_j, w_k$，这3个向量通过魔偶中函数的作用后所呈现出来的规律和$Ratio = \frac{P</em>{ik}}{P_{jk}}$具有一致性，即相等，也可以认为<strong>词向量中包含了共现概率矩阵的信息</strong>。</p>
+<p>（4）定义该未知函数是$F$，则</p>
+<script type="math/tex; mode=display">
+F(w_i,w_j, w_k) = \frac{P_{ik}}{P_{jk}}</script><h2 id="1-2-模型推导"><a href="#1-2-模型推导" class="headerlink" title="1.2  模型推导"></a><font size="3">1.2  模型推导</font></h2><p>（1）右侧的$\frac{P<em>{ik}}{P</em>{jk}}$是我们模型要求的两，左侧的$w_k, w_i, w_j$是我们要求的量，同时函数$F$是未知的。</p>
+<p>（2）$\frac{P<em>{ik}}{P</em>{jk}}$考察了<code>i, j, k</code>3个单词两两之间的相似关系，不妨单独考察<code>i, j</code>两个词和它们的词向量<script type="math/tex">w_i, w_j</script>，线性空间中的相似关系自然联想到两个向量的差$(v_i - v_j)$，所以函数$F$形式有</p>
+<script type="math/tex; mode=display">
+F(w_i - w_j, w_k) = \frac{P_{ik}}{P_{jk}}</script><p>（3）上面等式右侧是一个标量，而F是作用在两个向量上的，想来那个和标量之间的关系自然想到使用<strong>内积</strong>，所以$F$函数的形式进一步转化为</p>
+<script type="math/tex; mode=display">
+F((w_i - w_j)^T w_k) = F(w_i^T w_k - w_j^T w_k) = \frac{P_{ik}}{P_{jk}}</script><p>（4）上述等式的左侧是差，右侧是商，可以通过将$F$取<code>exp</code>将差和商关联起来</p>
+<script type="math/tex; mode=display">
+\exp(w_i^T w_k - w_j^T w_k) = \frac{\exp(w_i^T w_k)}{\exp(w_j^T w_k)} = \frac{P_{ik}}{P_{jk}}</script><p>（5）所以只要让分子和分母的等式能够成立即可，在整个文本库考察$\exp(w<em>i^Tw_k) = P</em>{ik} = \frac{X<em>{ik}}{X_i} $，即$w_i^T w_k = \log X</em>{ik} - \log X_i$</p>
+<p>（6）等式的左侧是向量的内积，交换次序不改变结果；但是右侧交换顺序则不成立；为了解决<strong>对称性</strong>问题，引入了两个偏置项$b_i, b_k$，模型变为</p>
+<script type="math/tex; mode=display">
+\log X_{ik} = w_i^T w_k + b_i + b_k</script><p>其中$b_i$中包含了$\log X_k$</p>
 <p>（7）实际实验中，两者不可能完全相等，只能接近，于是有了代价函数</p>
-<p>$$<br>J = \sum_{ik} (w_i^Tw_k + b_i + b_k - \log X_{ik})^2<br>$$</p>
-<p>（8）根据经验，两个词共现次数越多，那么这两个词在代价函数中的影响就应该越大，所以可以根据两个词共现次数设计一个权重项，来对代价函数中的每一项进行加权</p>
-<p>$$<br>J = \sum_{ik} f(X_{ik}) (w_i^T w_k + b_i + b_k - \log X_{ik})^2<br>$$</p>
-<p>&emsp;权重函数应该符合以下3个特点：</p>
+<script type="math/tex; mode=display">
+J = \sum_{ik} (w_i^Tw_k + b_i + b_k - \log X_{ik})^2</script><p>（8）根据经验，两个词共现次数越多，那么这两个词在代价函数中的影响就应该越大，所以可以根据两个词共现次数设计一个权重项，来对代价函数中的每一项进行加权</p>
+<script type="math/tex; mode=display">
+J = \sum_{ik} f(X_{ik}) (w_i^T w_k + b_i + b_k - \log X_{ik})^2</script><p>&emsp;权重函数应该符合以下3个特点：</p>
 <ul>
 <li>$f(0) = 0$，也就是说如果两个词没有共同出现过，权重就是0</li>
 <li>$f(x)$必须是一个单调不减函数，即两个词共同出现的次数多，权重应该越大</li>
 <li>$f(x)$对于较大的$x$不能取太大值，比如一些停用词</li>
 </ul>
-<p>&emsp;综合以上特点定义$f(x)$为：<br>$$<br>f(x) = \begin{cases} (\frac{x}{x_{\max}})^{\alpha}, &amp; if ; x &lt; x_{\max} \ 1 , &amp; otherwise \end{cases}<br>$$</p>
-<p>根据经验，这里的$x_{max}$通常设置为<code>100</code>，$\alpha$设置为$\frac{3}{4}$</p>
+<p>&emsp;综合以上特点定义$f(x)$为：</p>
+<script type="math/tex; mode=display">
+f(x) = \begin{cases} (\frac{x}{x_{\max}})^{\alpha}, & if \; x < x_{\max} \\ 1 , & otherwise \end{cases}</script><p>根据经验，这里的$x_{max}$通常设置为<code>100</code>，$\alpha$设置为$\frac{3}{4}$</p>
 <hr>
 <h1 id="2-关于CoVe"><a href="#2-关于CoVe" class="headerlink" title="2. 关于CoVe"></a><font size="4">2. 关于CoVe</font></h1><p>（1）网络结构</p>
 <ul>
@@ -225,10 +228,10 @@
 <p>&emsp;作者通过英语-德语机器翻译任务训练了一个模型，然后得到上下文向量CoVe，将CoVe和常规词向量通过一定方式结合得到用于特定任务的输入。</p>
 <p>（2）上下文向量CoVe</p>
 <p>&emsp;所谓的上下文向量CoVe就是通过机器翻译模型得到的</p>
-<p>$$<br>CoVe(w) = MT - LSTM(GloVe(w))<br>$$</p>
-<p>&emsp;其中<code>GloVe(w)</code>表示将单词<code>w</code>通过GloVe词表映射为对应的向量，然后将想来那个作为机器翻译模型中Encoder的输入，得到Encoder的输出就是上下文向量CoVe。在具体任务中，将传统词向量和CoVe进行拼接</p>
-<p>$$<br>\tilde{w} = [GloVe(w) ; CoVe(w)]<br>$$</p>
-<hr>
+<script type="math/tex; mode=display">
+CoVe(w) = MT - LSTM(GloVe(w))</script><p>&emsp;其中<code>GloVe(w)</code>表示将单词<code>w</code>通过GloVe词表映射为对应的向量，然后将想来那个作为机器翻译模型中Encoder的输入，得到Encoder的输出就是上下文向量CoVe。在具体任务中，将传统词向量和CoVe进行拼接</p>
+<script type="math/tex; mode=display">
+\tilde{w} = [GloVe(w) ; CoVe(w)]</script><hr>
 <blockquote>
 <p><strong>参考博客</strong></p>
 </blockquote>
@@ -743,5 +746,38 @@ MathJax.Hub.Queue(function() {
 
 </div>
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
 </body>
 </html>

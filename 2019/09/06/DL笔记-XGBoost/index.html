@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="utf-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -32,7 +32,7 @@
     #container.show {
       background: linear-gradient(200deg,#a0cfe4,#e8c37e);
     }
-  </style>
+  </style><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
   
@@ -40,7 +40,7 @@
 </head>
 </html>
 <body>
-  <div id="container" q-class="show:isCtnShow">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
     <div class="left-col" q-class="show:isShow">
       
@@ -179,13 +179,11 @@
       
         <p>本文主要介绍了XGBoost的原理、推导过程，以及工程上的优化方法。同时还介绍了LightGBM在XGBoost基础上的优化。</p>
 <a id="more"></a>
-
-
 <h1 id="1-函数形式"><a href="#1-函数形式" class="headerlink" title="1. 函数形式"></a><font size="4">1. 函数形式</font></h1><p>（1）给定数据集$\mathcal{D} = {(x_i, y_i)}$，XGBoost进行加法训练。</p>
 <p>（2）回归树预测输出是实际分数，可以用于回归、分类和排序等任务。<strong>对于回归问题，可以直接作为目标值；对于分类问题，需要映射成概率，比如$\sigma(z) = \frac{1}{1 + e^{-z}}$</strong></p>
 <p>（3）XGBoost的目的函数：</p>
-<p>$$<br>\mathcal{L}(\phi) = \sum_{i} l(\hat{y}<em>i,  y_i) + \sum</em>{k} \Omega(f_k)<br>$$</p>
-<ul>
+<script type="math/tex; mode=display">
+\mathcal{L}(\phi) = \sum_{i} l(\hat{y}_i,  y_i) + \sum_{k} \Omega(f_k)</script><ul>
 <li><p>这里的$\Omega(f) = \gamma T + \frac{1}{2} \lambda ||w||^2$</p>
 </li>
 <li><p>这里的$l(\hat{y}_i, y_i)$就是我们通常使用的损失函数</p>
@@ -198,25 +196,25 @@
 </li>
 </ul>
 <p>（4）第$t$次迭代后，模型的预测等于前$t-1$次的模型预测加上第$t$棵树的预测：</p>
-<p>$$<br>\hat{y}_i^{(t)} = \hat{y}_t^{(t-1)} + f_t(x_i)<br>$$</p>
-<p>此时目标函数可以写作：</p>
-<p>$$<br>\mathcal{L}^{(t)} = \sum_{i=1}^n l(y_i, \hat{y}_i^{(t-1)} + f_t(x_i)) + \Omega(f_t)<br>$$</p>
-<p>将误差函数在$\hat{y}_i^{(t-1)}$除进行二阶泰勒展开：</p>
-<p>$$<br>\mathcal{L}^{(t)} \approx \sum_{i=1}^n [l(y_i, \hat{y}_i^{(t-1)}) + g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega (f_t)<br>$$</p>
-<p>将公式中的常数项去掉，得到:</p>
-<p>$$<br>\tilde{\mathcal{L}}^{(t)} = \sum_{i=1}^n [g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t)<br>$$</p>
-<p>将$f_t, ; \Omega(f_t)$写成树结构的形式，即把下式带入目标函数中：</p>
-<p>$$<br>f(x) = w_q(x) \quad \Omega(f) = \gamma T + \frac{1}{2} \lambda ||w||^2<br>$$</p>
-<p>得到：</p>
-<p>$$<br>\tilde{\mathcal{L}}^{(t)} = \sum_{i=1}^n [g_i w_{q(x_i)} + \frac{1}{2} h_i w^2_{q(x_i)}] + \gamma T + \lambda \frac{1}{2} \sum_{j=1}^T w_j^2<br>$$</p>
-<p>定义每个叶节点$j$上的样本集合为$I_j = {i | q(x_i) = j }$，则目标函数可以写成按叶节点累加的形式：</p>
-<p>$$<br>\begin{align}\tilde{\mathcal{L}}^{(t)} &amp;= \sum_{j=1}^T [(\sum_{i \in I_j} g_i) w_j + \frac{1}{2} (\sum_{i \in I_j} h_i + \lambda) w_j^2] + \gamma T \ &amp;= \sum_{j=1}^T [G_j w_j + \frac{1}{2} (H_j + \lambda )w_j^2] + \gamma T \end{align}<br>$$</p>
-<p>确定了树的结构，为了使目标函数最小，可以令其导数为0，解得每个叶节点的最优预测分数为：</p>
-<p>$$<br>w^<em>_j = -\frac{G_j}{H_j + \lambda} \Rightarrow \ \tilde{\mathcal{L}}^</em> = -\frac{1}{2} \sum_{j=1}^T \frac{G_j^2}{H_j + \lambda} + \gamma T<br>$$</p>
-<p>上述公式中$\frac{G_j^2}{H_j + \lambda}$衡量了<strong>每个叶子节点对总体损失的贡献</strong>，希望损失越小越好，则对应的该值越大越好。</p>
+<script type="math/tex; mode=display">
+\hat{y}_i^{(t)} = \hat{y}_t^{(t-1)} + f_t(x_i)</script><p>此时目标函数可以写作：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}^{(t)} = \sum_{i=1}^n l(y_i, \hat{y}_i^{(t-1)} + f_t(x_i)) + \Omega(f_t)</script><p>将误差函数在$\hat{y}_i^{(t-1)}$除进行二阶泰勒展开：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}^{(t)} \approx \sum_{i=1}^n [l(y_i, \hat{y}_i^{(t-1)}) + g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega (f_t)</script><p>将公式中的常数项去掉，得到:</p>
+<script type="math/tex; mode=display">
+\tilde{\mathcal{L}}^{(t)} = \sum_{i=1}^n [g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t)</script><p>将$f_t, \; \Omega(f_t)$写成树结构的形式，即把下式带入目标函数中：</p>
+<script type="math/tex; mode=display">
+f(x) = w_q(x) \quad \Omega(f) = \gamma T + \frac{1}{2} \lambda ||w||^2</script><p>得到：</p>
+<script type="math/tex; mode=display">
+\tilde{\mathcal{L}}^{(t)} = \sum_{i=1}^n [g_i w_{q(x_i)} + \frac{1}{2} h_i w^2_{q(x_i)}] + \gamma T + \lambda \frac{1}{2} \sum_{j=1}^T w_j^2</script><p>定义每个叶节点$j$上的样本集合为$I_j = {i | q(x_i) = j }$，则目标函数可以写成按叶节点累加的形式：</p>
+<script type="math/tex; mode=display">
+\begin{align}\tilde{\mathcal{L}}^{(t)} &= \sum_{j=1}^T [(\sum_{i \in I_j} g_i) w_j + \frac{1}{2} (\sum_{i \in I_j} h_i + \lambda) w_j^2] + \gamma T \\ &= \sum_{j=1}^T [G_j w_j + \frac{1}{2} (H_j + \lambda )w_j^2] + \gamma T \end{align}</script><p>确定了树的结构，为了使目标函数最小，可以令其导数为0，解得每个叶节点的最优预测分数为：</p>
+<script type="math/tex; mode=display">
+w^*_j = -\frac{G_j}{H_j + \lambda} \Rightarrow \\ \tilde{\mathcal{L}}^* = -\frac{1}{2} \sum_{j=1}^T \frac{G_j^2}{H_j + \lambda} + \gamma T</script><p>上述公式中$\frac{G_j^2}{H_j + \lambda}$衡量了<strong>每个叶子节点对总体损失的贡献</strong>，希望损失越小越好，则对应的该值越大越好。</p>
 <p>所以，对一个叶子节点进行分裂，分裂前后的增益定义为：</p>
-<p>$$<br>\text{Gain} = \frac{G_L^2}{ H_L + \lambda} + \frac{G_R^2}{H_R + \lambda} - \frac{(G_L + G_R)^2}{H_L + H_R + \lambda} - \gamma<br>$$</p>
-<p>（5）XGBoost第一次的输入是<code>(y, 0)</code>，接下来的输入就是前面预测值的和，比如第一棵树的预测结果是<code>update_pred</code>，那么<code>y_pred += update_pred</code>，之后的输入是<code>(y, y_pred)</code></p>
+<script type="math/tex; mode=display">
+\text{Gain} = \frac{G_L^2}{ H_L + \lambda} + \frac{G_R^2}{H_R + \lambda} - \frac{(G_L + G_R)^2}{H_L + H_R + \lambda} - \gamma</script><p>（5）XGBoost第一次的输入是<code>(y, 0)</code>，接下来的输入就是前面预测值的和，比如第一棵树的预测结果是<code>update_pred</code>，那么<code>y_pred += update_pred</code>，之后的输入是<code>(y, y_pred)</code></p>
 <h1 id="2-树的分裂"><a href="#2-树的分裂" class="headerlink" title="2. 树的分裂"></a><font size="4">2. 树的分裂</font></h1><p>（1）精确算法：遍历所有特征的所有可能分割点，计算gain值，选取值最大的feature去分割</p>
 <p>（2）近似算法：<strong>对于每个特征，只考察分位点，减少计算复杂度</strong></p>
 <ul>
@@ -227,10 +225,10 @@
 <ul>
 <li>$\frac{1}{3}$分位点和$\frac{2}{3}$分位点将数据分成3部分，则Gain的计算：</li>
 </ul>
-<p>$$<br>\text{Gain} = \max { \text{Gain}, \frac{G^2_1}{H_1 + \lambda} + \frac{G^2_{23}}{H_{23} + \lambda} - \frac{G^2_{123}}{H_{123} + \lambda}, \frac{G_{12}^2}{H_{12} + \lambda} + \frac{G_3^2}{H_3 + \lambda} - \frac{G_{123}^2}{H_{123} + \lambda} - \gamma }<br>$$</p>
-<p>（4）<font color="blue"><strong>实际上，XGBoost并不是简单按照样本个数进行分位，而是以二阶导数值作为权重<code>Weighted Quantile Sketch</code></strong></font>。之所以使用二阶导数值作为权重，是因为：</p>
-<p>$$<br>\tilde{\mathcal{L}} = \sum_{i=1}^n \frac{1}{2} h_i (f_t(x_i) -\frac{g_i}{h_i})^2 + \Omega(f_t) + constant<br>$$</p>
-<ul>
+<script type="math/tex; mode=display">
+\text{Gain} = \max \{ \text{Gain}, \frac{G^2_1}{H_1 + \lambda} + \frac{G^2_{23}}{H_{23} + \lambda} - \frac{G^2_{123}}{H_{123} + \lambda}, \frac{G_{12}^2}{H_{12} + \lambda} + \frac{G_3^2}{H_3 + \lambda} - \frac{G_{123}^2}{H_{123} + \lambda} - \gamma \}</script><p>（4）<font color="blue"><strong>实际上，XGBoost并不是简单按照样本个数进行分位，而是以二阶导数值作为权重<code>Weighted Quantile Sketch</code></strong></font>。之所以使用二阶导数值作为权重，是因为：</p>
+<script type="math/tex; mode=display">
+\tilde{\mathcal{L}} = \sum_{i=1}^n \frac{1}{2} h_i (f_t(x_i) -\frac{g_i}{h_i})^2 + \Omega(f_t) + constant</script><ul>
 <li>即目标函数可以看出$h_i$对loss的加权作用</li>
 </ul>
 <p>（5）稀疏值处理：</p>
@@ -246,7 +244,8 @@
 </ul>
 <p>（7）系统设计：</p>
 <blockquote>
-<p><font color="blue"><strong>Column Block</strong></font></p>
+<font color="blue">**Column Block**</font>
+
 </blockquote>
 <ul>
 <li>特征预排序，以column Block的结构存储在内存中</li>
@@ -255,7 +254,8 @@
 <li>加速了split finding的过程，只需要在建树前排序一次，后面节点分裂时直接根据索引得到梯度信息</li>
 </ul>
 <blockquote>
-<p><font color="blue"><strong>Cache Aware Access</strong></font></p>
+<font color="blue">**Cache Aware Access**</font>
+
 </blockquote>
 <ul>
 <li>Column Block按特征大小顺序存储，相应的样本的梯度信息是分散的，造成内存的不连续访问，降低CPU cache的命中率</li>
@@ -309,7 +309,8 @@
 </ul>
 <hr>
 <blockquote>
-<p><font color="red"><strong>优化一：特征并行</strong></font></p>
+<font color="red">**优化一：特征并行**</font>
+
 </blockquote>
 <ul>
 <li>每个worker保存所有数据集</li>
@@ -354,7 +355,8 @@
 </ul>
 <hr>
 <blockquote>
-<p><font color="red"><strong>优化二：数据并行</strong></font></p>
+<font color="red">**优化二：数据并行**</font>
+
 </blockquote>
 <ul>
 <li>不同worker合并不同特征的局部直方图，采用直方图做差算法，只需要通信一个节点的直方图</li>
@@ -885,5 +887,38 @@ MathJax.Hub.Queue(function() {
 
 </div>
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
 </body>
 </html>

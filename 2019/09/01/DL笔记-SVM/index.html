@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="utf-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -32,7 +32,7 @@
     #container.show {
       background: linear-gradient(200deg,#a0cfe4,#e8c37e);
     }
-  </style>
+  </style><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
   
@@ -40,7 +40,7 @@
 </head>
 </html>
 <body>
-  <div id="container" q-class="show:isCtnShow">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
     <div class="left-col" q-class="show:isShow">
       
@@ -179,8 +179,6 @@
       
         <p>本文主要记录了SVM的推导过程以及其中一些参数的解释。</p>
 <a id="more"></a>
-
-
 <blockquote>
 <p><strong>参考</strong></p>
 </blockquote>
@@ -191,67 +189,67 @@
 <h1 id="1-了解SVM"><a href="#1-了解SVM" class="headerlink" title="1. 了解SVM"></a><font size="4">1. 了解SVM</font></h1><p>（1）给定$n$个数据$(x_1, y_1), \cdots, (x_n, y_n)$，其中$x_i$表示数据点，$y_i$表示标签值。在SVM中，<font color="red"><strong>标签值$y$可以取<code>1</code>或者<code>-1</code></strong></font>，分别表示两个不同的类。一个线性分类器就是<strong>找到一个$n$维空间下的超平面</strong>，平面的方程表示为$w^T x + b=0$。</p>
 <p>（2）上面提到SVM的类别取<code>1</code>或者<code>-1</code>。这其实和LR有关系，LR在经过线性计算之后，为了可以表示为概率，于是通过<code>sigmoid</code>函数映射到<code>(0, 1)</code>上；但实际上，我们也可以通过映射之前的值$\theta^T x$判断类别，即$\theta^T x &gt; 0$表示正，相反的则表示负。</p>
 <p>&emsp;而在SVM中，把<code>sigmoid</code>函数换位简单的符号函数，即可将标签进行映射，负号表示负类，正号表示正类：</p>
-<p>$$<br>g(z) = \begin{cases}1, &amp; z \geqslant 0 \ -1, &amp; z &lt; 0 \end{cases}<br>$$</p>
-<h2 id="1-1-函数间隔和几何间隔"><a href="#1-1-函数间隔和几何间隔" class="headerlink" title="1.1 函数间隔和几何间隔"></a><font size="3">1.1 函数间隔和几何间隔</font></h2><p>（1）在超平面$wx + b =0$确定的情况下，$|wx + b|$能够表示点$x$到超平面距离的远近；而 <font color="red"><strong>通过观察$wx + b$的符号与类标记$y$的符号是否一致可以判断分类是否正确</strong></font>，所以，可以用$y * (wx + b)$的正负性判定或表示分类的正确性。</p>
+<script type="math/tex; mode=display">
+g(z) = \begin{cases}1, & z \geqslant 0 \\ -1, & z < 0 \end{cases}</script><h2 id="1-1-函数间隔和几何间隔"><a href="#1-1-函数间隔和几何间隔" class="headerlink" title="1.1 函数间隔和几何间隔"></a><font size="3">1.1 函数间隔和几何间隔</font></h2><p>（1）在超平面$wx + b =0$确定的情况下，$|wx + b|$能够表示点$x$到超平面距离的远近；而 <font color="red"><strong>通过观察$wx + b$的符号与类标记$y$的符号是否一致可以判断分类是否正确</strong></font>，所以，可以用$y * (wx + b)$的正负性判定或表示分类的正确性。</p>
 <p>（2）<font size="3" color="blue"><strong>函数间隔</strong></font>：定义为</p>
-<p>$$<br>\hat{\gamma} = y (w^T x + b) = y f(x)<br>$$</p>
-<p>&emsp;超平面$(w, b)$关于$T$中所有样本点$(x_i, y_i)$的<strong>函数间隔最小值</strong>，便为超平面$(w, b)$关于数据集$T$的函数间隔。</p>
+<script type="math/tex; mode=display">
+\hat{\gamma} = y (w^T x + b) = y f(x)</script><p>&emsp;超平面$(w, b)$关于$T$中所有样本点$(x_i, y_i)$的<strong>函数间隔最小值</strong>，便为超平面$(w, b)$关于数据集$T$的函数间隔。</p>
 <p>&emsp;但是，<em>函数间隔存在明显的缺陷，比如以比例系数$k$增加$w, b$，这样在超平面没有改变的情况下，函数间隔却便为原来的$k$倍</em>。</p>
 <p>（3）<font size="3" color="blue"><strong>几何间隔</strong></font>：为了解决函数间隔的缺陷，通过对法向量$w$加上约束，得到点$x$到超平面的距离</p>
-<p>$$<br>\gamma = \frac{w^T x + b}{ ||w||}<br>$$</p>
-<blockquote>
+<script type="math/tex; mode=display">
+\gamma = \frac{w^T x + b}{ ||w||}</script><blockquote>
 <p>证明：设$x_0$为点$x$在超平面$(w, b)$上的投影，距离设为$\gamma$，由于$w$是超平面的法向量，根据向量加法可以得到$x = x_0 + \gamma \frac{w}{||w||}\quad (1)$；又因为$x_0$是超平面上的点，所以有$w^T x_0 + b = 0 \quad (2)$；将<code>(1)</code>两边同乘以$w^T$，得到$w^T x = w^T x_0 + \gamma \frac{w^Tw}{||w||} \quad (3)$；由于$w^T x_0 = -b, \quad w^Tw = ||w||^2$，于是可以得到上式，得证。</p>
 </blockquote>
 <p>&emsp;为了得到$\gamma$的绝对值，令$\gamma$乘上对应的类别$y$，得到最终的<strong>几何间隔</strong>：</p>
-<p>$$<br>\tilde{\gamma} = y \gamma = \frac{\hat{\gamma}}{||w||}<br>$$</p>
-<p>&emsp;同时可以看出函数间隔和几何间隔的关系。</p>
+<script type="math/tex; mode=display">
+\tilde{\gamma} = y \gamma = \frac{\hat{\gamma}}{||w||}</script><p>&emsp;同时可以看出函数间隔和几何间隔的关系。</p>
 <h2 id="1-2-最大间隔分类器"><a href="#1-2-最大间隔分类器" class="headerlink" title="1.2 最大间隔分类器"></a><font size="3">1.2 最大间隔分类器</font></h2><p>（1）对一个数据点分尅，超平面离数据点间隔越大，分类的置信度越高。为了使得置信度尽可能高，需要选择可以<strong>最大化间隔值的超平面</strong>。</p>
 <p>（2）最大化间隔分类器的目标函数定义为：</p>
-<p>$$<br>\max ; \tilde{\gamma} \ s.t. ; y_i (w^T x_i + b) \geqslant \tilde{\gamma}, \quad i =1, \cdots, n<br>$$</p>
-<ul>
+<script type="math/tex; mode=display">
+\max \; \tilde{\gamma} \\ s.t. \; y_i (w^T x_i + b) \geqslant \tilde{\gamma}, \quad i =1, \cdots, n</script><ul>
 <li>条件表示希望所有的间隔值都能大于最大化分类器的间隔</li>
 </ul>
 <p>（3）由于<a href="https://www.zhihu.com/question/64568136" target="_blank" rel="noopener"><strong>函数间隔并不影响最终参数的结果</strong></a>，所以可以令$\hat{\gamma} = 1$，得到转化后的目标函数</p>
-<p>$$<br>\max \frac{1}{||w||}, \quad s.t. ; y_i (w^T x_i + b) \geqslant 1<br>$$</p>
-<ul>
+<script type="math/tex; mode=display">
+\max \frac{1}{||w||}, \quad s.t. \; y_i (w^T x_i + b) \geqslant 1</script><ul>
 <li>这样，<strong>间隔边界到超平面的距离就是几何间隔，而虚线间隔边界上的点则是支持向量</strong>。</li>
 </ul>
 <h1 id="2-深入SVM"><a href="#2-深入SVM" class="headerlink" title="2. 深入SVM"></a><font size="4">2. 深入SVM</font></h1><p>（1）将上面的目标函数进行转化，等价于</p>
-<p>$$<br>\min \frac{1}{2} ||w|| \ s.t. ; y_i(w^T x_i + b) \geqslant 1<br>$$</p>
-<h2 id="2-1-对偶问题和KKT条件"><a href="#2-1-对偶问题和KKT条件" class="headerlink" title="2.1 对偶问题和KKT条件"></a><font size="3">2.1 对偶问题和KKT条件</font></h2><p>（1）通过在每一个约束条件加上一个拉格朗日乘子$\alpha$，得到拉格朗日函数，并最优化这个函数</p>
-<p>$$<br>\mathcal{L}(w, b, \alpha) = \frac{1}{2} ||w||^2 - \sum_{i=1}^n \alpha_i (y_i (w^T x_i + b) - 1)  \ \Rightarrow \ \theta(w) = \underset{\alpha_i \geqslant 0}{\max} \mathcal{L} (w, b, \alpha)<br>$$</p>
-<ul>
+<script type="math/tex; mode=display">
+\min \frac{1}{2} ||w|| \\ s.t. \; y_i(w^T x_i + b) \geqslant 1</script><h2 id="2-1-对偶问题和KKT条件"><a href="#2-1-对偶问题和KKT条件" class="headerlink" title="2.1 对偶问题和KKT条件"></a><font size="3">2.1 对偶问题和KKT条件</font></h2><p>（1）通过在每一个约束条件加上一个拉格朗日乘子$\alpha$，得到拉格朗日函数，并最优化这个函数</p>
+<script type="math/tex; mode=display">
+\mathcal{L}(w, b, \alpha) = \frac{1}{2} ||w||^2 - \sum_{i=1}^n \alpha_i (y_i (w^T x_i + b) - 1)  \\ \Rightarrow \\ \theta(w) = \underset{\alpha_i \geqslant 0}{\max} \mathcal{L} (w, b, \alpha)</script><ul>
 <li>在有约束条件的情况下最小化$\frac{1}{2} ||w||^2$，实际上等价于直接最小化$\theta(w)$，即最终的目标函数为</li>
 </ul>
-<p>$$<br>\underset{w, b}{\min} \theta(w) = \underset{w, b}{\min} \underset{\alpha_i \geqslant 0}{\mathcal{L}(w, b, \alpha)} = p^*<br>$$</p>
-<ul>
+<script type="math/tex; mode=display">
+\underset{w, b}{\min} \theta(w) = \underset{w, b}{\min} \underset{\alpha_i \geqslant 0}{\mathcal{L}(w, b, \alpha)} = p^*</script><ul>
 <li>为了便于求解，转化为<strong>对偶问题</strong></li>
 </ul>
-<p>$$<br>\underset{\alpha_i \geqslant 0}{\max} \underset{w, b}{\min} \mathcal{L}(w, b, \alpha) = d^*<br>$$</p>
-<p>（2）KKT条件是一个非线性规划问题能有最优解的充要条件。经验证，我们这里的最优化问题满足KKT条件，那么求解这个对偶学习问题，分为3个步骤：</p>
+<script type="math/tex; mode=display">
+\underset{\alpha_i \geqslant 0}{\max} \underset{w, b}{\min} \mathcal{L}(w, b, \alpha) = d^*</script><p>（2）KKT条件是一个非线性规划问题能有最优解的充要条件。经验证，我们这里的最优化问题满足KKT条件，那么求解这个对偶学习问题，分为3个步骤：</p>
 <ul>
 <li>第一，让$\mathcal{L}(w, b, a)$关于$w$和$b$最小化</li>
 <li>第二，求对$\alpha$的极大</li>
 <li>第三，利用<code>SMO</code>算法求解对偶问题中的拉格朗日乘子</li>
 </ul>
 <h2 id="2-2-对偶问题求解的3个步骤"><a href="#2-2-对偶问题求解的3个步骤" class="headerlink" title="2.2 对偶问题求解的3个步骤"></a><font size="3">2.2 对偶问题求解的3个步骤</font></h2><p>（1）首先固定$\alpha$，求$\mathcal{L}$关于$w, b$的偏导数，并令偏导数为0，得到：</p>
-<p>$$<br>\frac{\partial \mathcal{L}}{\partial w} = 0 \rightarrow w = \sum_{i=1}^n \alpha_i y_i x_i \ \frac{\partial \mathcal{L}}{\partial b} = 0 \rightarrow \sum_{i=1}^n \alpha_i y_i = 0<br>$$</p>
-<p>&emsp;经过推导得到</p>
-<p>$$<br>\mathcal{L}(w, b, \alpha) = \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j y_i y_j x_i^T x_j<br>$$</p>
-<p>（2）求对$\alpha$的极大，由上面的结果可以得到本次的优化公式</p>
-<p>$$<br>\underset{\alpha}{\max} \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j y_i y_j x_i^T x_j  \ s.t. \quad \alpha_i \geqslant 0, ; \sum_{i=1}^n \alpha_i y_i = 0<br>$$</p>
-<p>（3）根据SMO算法求解$\alpha$，根据$\alpha$即可求得对应的$w, b$</p>
-<p>$$<br>w^* = \sum_{i=1}^N \alpha_i^* y_i x_i \ b^* = y_j - \sum_{i=1}^N \alpha^*_i (x_i \cdot x_j)<br>$$</p>
-<h2 id="2-3-线性不可分问题"><a href="#2-3-线性不可分问题" class="headerlink" title="2.3 线性不可分问题"></a><font size="3">2.3 线性不可分问题</font></h2><p>（1）将上面求解得到的$w$带入分类函数，得到</p>
-<p>$$<br>\begin{align}f(x) &amp; = \big(\sum_{i=1}^n \alpha_i y_i x_i \big)^T x + b \ &amp; = \sum_{i=1}^n \alpha_i y_i &lt;x_i, x&gt; + b \end{align}<br>$$</p>
-<ul>
+<script type="math/tex; mode=display">
+\frac{\partial \mathcal{L}}{\partial w} = 0 \rightarrow w = \sum_{i=1}^n \alpha_i y_i x_i \\ \frac{\partial \mathcal{L}}{\partial b} = 0 \rightarrow \sum_{i=1}^n \alpha_i y_i = 0</script><p>&emsp;经过推导得到</p>
+<script type="math/tex; mode=display">
+\mathcal{L}(w, b, \alpha) = \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j y_i y_j x_i^T x_j</script><p>（2）求对$\alpha$的极大，由上面的结果可以得到本次的优化公式</p>
+<script type="math/tex; mode=display">
+\underset{\alpha}{\max} \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j y_i y_j x_i^T x_j  \\ s.t. \quad \alpha_i \geqslant 0, \; \sum_{i=1}^n \alpha_i y_i = 0</script><p>（3）根据SMO算法求解$\alpha$，根据$\alpha$即可求得对应的$w, b$</p>
+<script type="math/tex; mode=display">
+w^* = \sum_{i=1}^N \alpha_i^* y_i x_i \\ b^* = y_j - \sum_{i=1}^N \alpha^*_i (x_i \cdot x_j)</script><h2 id="2-3-线性不可分问题"><a href="#2-3-线性不可分问题" class="headerlink" title="2.3 线性不可分问题"></a><font size="3">2.3 线性不可分问题</font></h2><p>（1）将上面求解得到的$w$带入分类函数，得到</p>
+<script type="math/tex; mode=display">
+\begin{align}f(x) & = \big(\sum_{i=1}^n \alpha_i y_i x_i \big)^T x + b \\ & = \sum_{i=1}^n \alpha_i y_i <x_i, x> + b \end{align}</script><ul>
 <li>也就是说，只需要计算新点$x$与训练数据点的内积即可；</li>
 <li>事实上，<strong>所有的非支持向量的对应系数$\alpha$等于0</strong>，因此只需要针对少量的支持向量计算内积。</li>
 </ul>
 <h2 id="2-4-核函数"><a href="#2-4-核函数" class="headerlink" title="2.4 核函数"></a><font size="3">2.4 核函数</font></h2><p>（1）在线性不可分的情况下，<strong>支持向量机首先在低维空间完成计算，然后通过核函数将输入空间映射到高维特征空间，最终在高维特征空间中构造出最有分离超平面，从而把平面上本身不好分的非线性数据分开</strong>。</p>
 <p>（2）应用一个固定的非线性映射，将数据映射到特征空间，在特征空间使用线性学习器，考虑这种类型的函数：</p>
-<p>$$<br>f(x) = \sum_{i=1}^N w_i \phi_i(x) + b<br>$$</p>
-<ul>
+<script type="math/tex; mode=display">
+f(x) = \sum_{i=1}^N w_i \phi_i(x) + b</script><ul>
 <li>这里$\phi$是从输入空间到某个特征空间的映射，意味着非线性学习器分为两步<ul>
 <li>使用非线性映射将数据转换为一个特征空间</li>
 <li>在特征空间使用线性学习器分类</li>
@@ -259,12 +257,12 @@
 </li>
 </ul>
 <p>（3）相当于把原来的分类函数，映射成了：</p>
-<p>$$<br>f(x) = \sum_{i=1}^n \alpha_i y_i &lt;\phi(x_i), \phi(x)&gt; + b<br>$$</p>
-<p>（4）把计算两个向量在隐式映射过后的空间中的内积函数称为<strong>核函数</strong>，于是分类函数为：</p>
-<p>$$<br>f(x) = \sum_{i=1}^n \alpha_i y_i \mathcal{k}(x_i, x) + b<br>$$</p>
-<p>&emsp;对应的求解$\alpha$的对偶问题转换为</p>
-<p>$$<br>\underset{\alpha}{\max} \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j y_i y_j \mathcal{k}(x_i^, x_j) \ s.t. \quad \alpha_i \geqslant 0, ; \sum_{i=1}^n \alpha_i y_i = 0<br>$$</p>
-<p>（5）常见的几个核函数：</p>
+<script type="math/tex; mode=display">
+f(x) = \sum_{i=1}^n \alpha_i y_i <\phi(x_i), \phi(x)> + b</script><p>（4）把计算两个向量在隐式映射过后的空间中的内积函数称为<strong>核函数</strong>，于是分类函数为：</p>
+<script type="math/tex; mode=display">
+f(x) = \sum_{i=1}^n \alpha_i y_i \mathcal{k}(x_i, x) + b</script><p>&emsp;对应的求解$\alpha$的对偶问题转换为</p>
+<script type="math/tex; mode=display">
+\underset{\alpha}{\max} \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j y_i y_j \mathcal{k}(x_i^, x_j) \\ s.t. \quad \alpha_i \geqslant 0, \; \sum_{i=1}^n \alpha_i y_i = 0</script><p>（5）常见的几个核函数：</p>
 <ul>
 <li><p><strong>多项式核</strong>：也就是次幂的形式</p>
 </li>
@@ -281,16 +279,16 @@
 </ul>
 <h2 id="2-5-使用松弛变量"><a href="#2-5-使用松弛变量" class="headerlink" title="2.5 使用松弛变量"></a><font size="3">2.5 使用松弛变量</font></h2><p>（1）对于并不是数据本身的非线性结构，而是数据存在噪音的情况。为了处理这种情况，SVM<em>允许数据点在一定程度上偏离一下超平面</em>。</p>
 <p>（2）考虑outlier的情况，那么约束条件和最优化函数变为：</p>
-<p>$$<br>\begin{cases}y_i(w^T x_i + b) \geqslant 1- \xi_i \ \min \frac{1}{2} ||w||^2 + C \sum_{i=1}^n \xi_i \end{cases}<br>$$</p>
-<ul>
+<script type="math/tex; mode=display">
+\begin{cases}y_i(w^T x_i + b) \geqslant 1- \xi_i \\ \min \frac{1}{2} ||w||^2 + C \sum_{i=1}^n \xi_i \end{cases}</script><ul>
 <li>其中，$\xi_i \geqslant 0$是<strong>松弛变量</strong></li>
 <li>参数$C$控制目标函数中的两项，</li>
 </ul>
 <p>（3）目标函数转化为：</p>
-<p>$$<br>\mathcal{L}(w, b, \xi, \alpha, r) = \frac{1}{2} ||w||^2 + C \sum_{i=1}^n \xi_i - \sum_{i=1}^n \alpha_i (y_i(w^Tx_i + b) - 1 + \xi_i) - \sum_{i=1}^n r_i \xi_i<br>$$</p>
-<p>&emsp;同样利用求导计算带入（新增一个 $\frac{\partial \mathcal{L}}{\partial \xi_i} = 0 \rightarrow C - \alpha_i - r_i = 0, \quad r_i \geqslant 0$ ），即有 $\alpha_i \leqslant C$ 得到对偶问题。</p>
-<p>$$<br>\underset{\alpha}{\max} \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j y_i y_j &lt;x_i, x_j&gt; \ s.t. ; 0 \leqslant \alpha_i \leqslant C, \quad \sum_{i=1}^n \alpha_i y_i = 0<br>$$</p>
-
+<script type="math/tex; mode=display">
+\mathcal{L}(w, b, \xi, \alpha, r) = \frac{1}{2} ||w||^2 + C \sum_{i=1}^n \xi_i - \sum_{i=1}^n \alpha_i (y_i(w^Tx_i + b) - 1 + \xi_i) - \sum_{i=1}^n r_i \xi_i</script><p>&emsp;同样利用求导计算带入（新增一个 $\frac{\partial \mathcal{L}}{\partial \xi_i} = 0 \rightarrow C - \alpha_i - r_i = 0, \quad r_i \geqslant 0$ ），即有 $\alpha_i \leqslant C$ 得到对偶问题。</p>
+<script type="math/tex; mode=display">
+\underset{\alpha}{\max} \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j y_i y_j <x_i, x_j> \\ s.t. \; 0 \leqslant \alpha_i \leqslant C, \quad \sum_{i=1}^n \alpha_i y_i = 0</script>
       
 
       
@@ -785,5 +783,38 @@ MathJax.Hub.Queue(function() {
 
 </div>
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
 </body>
 </html>

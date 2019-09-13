@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="utf-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -32,7 +32,7 @@
     #container.show {
       background: linear-gradient(200deg,#a0cfe4,#e8c37e);
     }
-  </style>
+  </style><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
   
@@ -40,7 +40,7 @@
 </head>
 </html>
 <body>
-  <div id="container" q-class="show:isCtnShow">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
     <div class="left-col" q-class="show:isShow">
       
@@ -179,11 +179,8 @@
       
         <p>本文主要记录DNN和CNN的前向传播和反向传播的过程。</p>
 <a id="more"></a>
-
 <h1 id="1-DNN的算法过程"><a href="#1-DNN的算法过程" class="headerlink" title="1. DNN的算法过程"></a><font size="4">1. DNN的算法过程</font></h1><blockquote>
 <p><strong>输入</strong>：层数$L$，各隐层和输出层的神经元个数、激活函数、迭代步长$\alpha$，最大迭代次数与停止迭代的阈值$\epsilon$，输入的$m$个训练样本${(x_1, y_1), \cdots, (x_m y_m)}$</p>
-</blockquote>
-<blockquote>
 <p><strong>输出</strong>：各隐层和输出层的线性关系系数矩阵$W$和偏置向量$b$</p>
 </blockquote>
 <ol>
@@ -205,18 +202,17 @@
 </li>
 </ul>
 </li>
-<li><p><code>for l =2 to L</code>，更新第$l$层的参数$W^l, b^l$<br>$$<br>W^l = W^l - \alpha \sum_{i=1}^m \delta^{i, l} (a^{i, l-1})^T \ b^l = b^l - \alpha \sum_{i=1}^m \delta^{i, l}<br>$$</p>
-</li>
+<li><p><code>for l =2 to L</code>，更新第$l$层的参数$W^l, b^l$</p>
+<script type="math/tex; mode=display">
+W^l = W^l - \alpha \sum_{i=1}^m \delta^{i, l} (a^{i, l-1})^T \\ b^l = b^l - \alpha \sum_{i=1}^m \delta^{i, l}</script></li>
 <li><p>如果所有$W, b$的变化值小于停止迭代阈值$\epsilon$，则跳出循环到步骤3</p>
 </li>
 </ul>
-<ol start="3">
+<ol>
 <li>输出各隐层与输出层的线性关系矩阵$W$和偏置向量$b$</li>
 </ol>
 <h1 id="2-CNN的算法过程"><a href="#2-CNN的算法过程" class="headerlink" title="2. CNN的算法过程"></a><font size="4">2. CNN的算法过程</font></h1><blockquote>
 <p><strong>输入</strong>：$m$个二维样本，<code>CNN</code>模型的层数$L$和所有隐藏层的类型。对于卷积层，要定义卷积核的大小$K$，卷积核子矩阵维度$F$，填充大小$P$，步幅$S$；对于池化层，要定义池化区域大小$k$和池化标准（<code>Max</code>或<code>Average</code>）；对于全连接层，要定义全连接层的激活函数和各层神经元 的个数。梯度迭代步长$\alpha$，最大迭代次数<code>MAX</code>与停止迭代的阈值$\epsilon$</p>
-</blockquote>
-<blockquote>
 <p><strong>输出</strong>：<code>CNN</code>模型各隐藏层与输出层的$W, b$</p>
 </blockquote>
 <ol>
@@ -258,16 +254,16 @@
 </li>
 <li><p><code>for l=L-1 to 2</code>，根据下2种情况更新第$l$层的$W^l, b^l$</p>
 <ul>
-<li><p>如果是全连接层，则$W^{l} = W^{l} - \alpha \sum_{i=1}^m \delta^{i, l} (a^{i, l-1})^T, ; b^l = b^l - \alpha \sum_{i=1}^m \delta^{i, l}$</p>
+<li><p>如果是全连接层，则$W^{l} = W^{l} - \alpha \sum<em>{i=1}^m \delta^{i, l} (a^{i, l-1})^T, \; b^l = b^l - \alpha \sum</em>{i=1}^m \delta^{i, l}$</p>
 </li>
-<li><p>如果是卷积层，对于每一个卷积核有$W^l = W^l - \alpha \sum_{i=1}^m \delta^{i, l} * a^{i, l-1}, ; b^l = b^l - \alpha \sum_{i=1}^m \sum_{u, v} (\delta^{i, l}_{u, v})$ </p>
+<li><p>如果是卷积层，对于每一个卷积核有$W^l = W^l - \alpha \sum<em>{i=1}^m \delta^{i, l} * a^{i, l-1}, \; b^l = b^l - \alpha \sum</em>{i=1}^m \sum<em>{u, v} (\delta^{i, l}</em>{u, v})$ </p>
 </li>
 </ul>
 </li>
 <li><p>如果所有$W, b$的变化值都小于停止迭代阈值$\epsilon$，则跳出循环到步骤3。</p>
 </li>
 </ul>
-<ol start="3">
+<ol>
 <li>输出各隐层和输出层的线性关系系数矩阵。</li>
 </ol>
 
@@ -765,5 +761,38 @@ MathJax.Hub.Queue(function() {
 
 </div>
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
 </body>
 </html>

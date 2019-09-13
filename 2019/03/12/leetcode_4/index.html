@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="utf-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -32,7 +32,7 @@
     #container.show {
       background: linear-gradient(200deg,#a0cfe4,#e8c37e);
     }
-  </style>
+  </style><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
   
@@ -40,7 +40,7 @@
 </head>
 </html>
 <body>
-  <div id="container" q-class="show:isCtnShow">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
     <div class="left-col" q-class="show:isShow">
       
@@ -181,7 +181,6 @@
 <p>给定两个大小为m和n的有序数组nums1和nums2，请找出这两个有序数组的中位数，并且要求算法的时间复杂度为$O(\log(m+n))$；可以假设nums1和nums2不会同时为空。</p>
 </blockquote>
 <a id="more"></a>
-
 <blockquote>
 <blockquote>
 <p><strong>我的解答</strong></p>
@@ -189,7 +188,6 @@
 </blockquote>
 <p> 将两个列表中前一半的元素取出放在一个列表中，如果是偶数个元素，则取出其中的后两个元素求平均；如果是奇数个元素，取出最后一个元素即可。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findMedianSortedArrays</span><span class="params">(self, nums1: List[int], nums2: List[int])</span> -&gt; float:</span></span><br><span class="line">        <span class="comment"># 计算两个列表的长度和</span></span><br><span class="line">        length = len(nums1) + len(nums2)</span><br><span class="line">        <span class="comment"># 用来存储合并两个列表的前一半项</span></span><br><span class="line">        temp = []</span><br><span class="line">        i, j, k= <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">        <span class="comment"># 当k小于其中的一半时</span></span><br><span class="line">        <span class="keyword">while</span>( k &lt;= (length//<span class="number">2</span>) ):</span><br><span class="line">            <span class="comment"># 如果两个列表都不为空，且当前索引不是最后一项</span></span><br><span class="line">            <span class="keyword">if</span>(i &lt; len(nums1) <span class="keyword">and</span> j &lt; len(nums2)):</span><br><span class="line">                <span class="keyword">if</span>(nums1[i] &lt; nums2[j]):</span><br><span class="line">                    temp.append(nums1[i])</span><br><span class="line">                    i += <span class="number">1</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    temp.append(nums2[j])</span><br><span class="line">                    j += <span class="number">1</span></span><br><span class="line">            <span class="comment"># 如果第一个列表没有到表尾    </span></span><br><span class="line">            <span class="keyword">elif</span> i &lt; len(nums1):</span><br><span class="line">                temp.append(nums1[i])</span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line">            <span class="comment"># 如果第二个列表没有到表尾</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                temp.append(nums2[j])</span><br><span class="line">                j += <span class="number">1</span></span><br><span class="line">            k += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(length % <span class="number">2</span> == <span class="number">0</span>):</span><br><span class="line">            <span class="comment"># 如果是偶数个数，那么等于保存的后两项的均值</span></span><br><span class="line">            <span class="keyword">return</span> (temp[<span class="number">-1</span>] + temp[<span class="number">-2</span>]) / <span class="number">2</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 如果是奇数个数，就等于最后一项</span></span><br><span class="line">            <span class="keyword">return</span> temp[<span class="number">-1</span>]</span><br></pre></td></tr></table></figure>
-
 <blockquote>
 <blockquote>
 <p><strong>官方解答Python版</strong></p>
@@ -199,7 +197,6 @@
 <p> 首先找到两个列表中较短的那一个，以较短的A为参考点划分，划分为开始时选在<strong>中点i</strong>，那么另一个较长的j就等于总长度的一半减去i。如果对于当前的i值，B的左半部分最大值大于A的右半部分最小值，说明i应该再往后移动(<code>imin = i+1</code>)；如果A的左半部分最大值大于B的右半部分最小值，说明i太大了，应该往前移动(<code>imax = i - 1</code>)，类似于二分法；否则说明选择到了合适的位置进行划分，如果i=0，说明A的左半部分没有值，那么左侧最大值记为B[j-1]，如果j=0，说明B的左半部分没有值，左侧最大值记为A[i-1]，否则记为两者中的较大值；同理对右半部分操作。</p>
 <p> 如果是奇数个，直接返回左侧最大值（因为划分的时候偏向于左侧多一个值）；偶数个则返回左侧最大值和右侧最小值的平均。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">median</span><span class="params">(A, B)</span>:</span></span><br><span class="line">    <span class="comment"># 获取两个列表的长度</span></span><br><span class="line">    m,n = len(A), len(B)</span><br><span class="line">    <span class="keyword">if</span> m &gt; n:</span><br><span class="line">        A, B, m, n = B, A, n, m</span><br><span class="line">    <span class="comment"># 如果元素较多的为空，返回错误</span></span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">raise</span> ValueError</span><br><span class="line"></span><br><span class="line">    <span class="comment"># i表示我们要对较短的那个列表如何进行划分</span></span><br><span class="line">    imin, imax, half_len = <span class="number">0</span>,  m, (m+n+<span class="number">1</span>)//<span class="number">2</span></span><br><span class="line">    <span class="comment"># 当没有超过搜索范围时</span></span><br><span class="line">    <span class="keyword">while</span> imin &lt;= imax:</span><br><span class="line">        i = (imin + imax) // <span class="number">2</span></span><br><span class="line">        j = half_len - i</span><br><span class="line">        <span class="comment"># 如果i值小于其长度m，并且B[j-1]的值大于A[i]</span></span><br><span class="line">        <span class="comment"># 表示i太小了，可以再往后移动</span></span><br><span class="line">        <span class="keyword">if</span> i &lt; m <span class="keyword">and</span> B[j<span class="number">-1</span>] &gt; A[i]:</span><br><span class="line">            imin = i + <span class="number">1</span></span><br><span class="line">        <span class="comment"># 如果i值大于0并且A[i-1]大于B[j]</span></span><br><span class="line">        <span class="comment"># 说明i值太大了，可以再往前移动</span></span><br><span class="line">        <span class="keyword">elif</span> i &gt; <span class="number">0</span> <span class="keyword">and</span> A[i<span class="number">-1</span>] &gt; B[j]:</span><br><span class="line">            imax = i - <span class="number">1</span></span><br><span class="line">        <span class="comment"># 否则，说明找到了合适的i值</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 如果i值等于0，则最大值是B中的</span></span><br><span class="line">            <span class="keyword">if</span> i == <span class="number">0</span>:</span><br><span class="line">                max_of_left = B[j<span class="number">-1</span>]</span><br><span class="line">            <span class="keyword">elif</span> j == <span class="number">0</span>:</span><br><span class="line">                max_of_left = A[i<span class="number">-1</span>]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                max_of_left = max(A[i<span class="number">-1</span>], B[j<span class="number">-1</span>])</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 如果总数为奇数个，返回其值即可</span></span><br><span class="line">            <span class="keyword">if</span> ( m + n) % <span class="number">2</span> == <span class="number">1</span>:</span><br><span class="line">                <span class="keyword">return</span> max_of_left</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 如果i到达最后，那么最小值就是B[j]</span></span><br><span class="line">            <span class="keyword">if</span> i == m:</span><br><span class="line">                min_of_right = B[j]</span><br><span class="line">            <span class="keyword">elif</span> j == n:</span><br><span class="line">                min_of_right = A[i]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                min_of_right = min(A[i], B[j])</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> (max_of_left + min_of_right) / <span class="number">2</span></span><br></pre></td></tr></table></figure>
-
 
       
 
@@ -695,5 +692,38 @@ MathJax.Hub.Queue(function() {
 
 </div>
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
 </body>
 </html>

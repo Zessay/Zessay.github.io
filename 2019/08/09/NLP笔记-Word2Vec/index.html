@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="utf-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -32,7 +32,7 @@
     #container.show {
       background: linear-gradient(200deg,#a0cfe4,#e8c37e);
     }
-  </style>
+  </style><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
   
@@ -40,7 +40,7 @@
 </head>
 </html>
 <body>
-  <div id="container" q-class="show:isCtnShow">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
     <div class="left-col" q-class="show:isShow">
       
@@ -179,25 +179,25 @@
       
         <p>&emsp;本文主要记录了关于Word2Vec两篇论文的内容以及一些自己的理解。</p>
 <a id="more"></a>
-
-
 <h1 id="1-文本表征方式的概述"><a href="#1-文本表征方式的概述" class="headerlink" title="1. 文本表征方式的概述"></a><font size="4">1. 文本表征方式的概述</font></h1><p>（１）两种表征方式</p>
 <ul>
 <li>一个神经元对应一种颜色，即<strong>一对一</strong>，这种称为<strong>局部表示 <code>Local Representation</code></strong>；</li>
 <li>用一组神经元表示一个特定的颜色，即<strong>多对多</strong>，这种称为<strong>分布式表示 <code>Distributed Representation</code></strong>。</li>
 </ul>
 <p>（２）词袋模型在信息检索中称为<strong>向量空间模型</strong>；改进方法是将高维的局部表示向量空间映射到一个地位的空间，这时<strong>每个特征不再是坐标轴上的点，而是分散在整个低维空间中</strong>。</p>
-<p>（３）如何知道N-gram中的条件概率　$P(w_t | w_{(t-n+1):(t-1)})$ 的值：</p>
+<p>（３）如何知道N-gram中的条件概率　$P(w<em>t | w</em>{(t-n+1):(t-1)})$ 的值：</p>
 <ul>
 <li>一是假设语言服从多项分布，并利用最大似然估计来求解多项分布的参数</li>
 <li>二是用一个函数$f(w_{1:(t-1)})$直接估计下一个词是$w_t$的概率</li>
 </ul>
-<p>（４）一个语言模型$M$的<strong>困惑度</strong>：<br>$$<br> \mathcal{PPLM}<em>M = 2^{-\frac{1}{T} \sum</em>{i=1}^N \log p(s_i)} = \bigg(\prod_{i=1}^N \prod_{j=1}^{n_i} p(w_j^{(i)} | w_{(j-n+1):(j-1)}^{(i)}) \bigg)^{ - \frac{1}{T}}<br>$$<br>其中 $T$　表示测试数据集中所有词的个数，可以看出：<strong>困惑度是每个词条件概率的几何平均数的倒数</strong>，句子概率越大，困惑度越小，语言模型越好。</p>
+<p>（４）一个语言模型$M$的<strong>困惑度</strong>：</p>
+<script type="math/tex; mode=display">
+ \mathcal{PPLM}_M = 2^{-\frac{1}{T} \sum_{i=1}^N \log p(s_i)} = \bigg(\prod_{i=1}^N \prod_{j=1}^{n_i} p(w_j^{(i)} | w_{(j-n+1):(j-1)}^{(i)}) \bigg)^{ - \frac{1}{T}}</script><p>其中 $T$　表示测试数据集中所有词的个数，可以看出：<strong>困惑度是每个词条件概率的几何平均数的倒数</strong>，句子概率越大，困惑度越小，语言模型越好。</p>
 <p>（５）<strong>NNLM (神经网络语言模型)</strong></p>
 <ul>
 <li><p><strong>输入层</strong>: 将符号转换为向量，通过词嵌入矩阵完成，通过词嵌入得到历史信息 $w_{1:(t-1)}$ 每个词对应的向量表示。</p>
 </li>
-<li><p><strong>隐藏层</strong>: 隐藏层可以是不同类型的网络，前馈神经网络或者循环神经网络，其输入为词向量 $v_{w_{1}}, \cdots, v_{w_{t-1}}$，输出为一个可以表示历史信息的向量$h_{t}$</p>
+<li><p><strong>隐藏层</strong>: 隐藏层可以是不同类型的网络，前馈神经网络或者循环神经网络，其输入为词向量 $v<em>{w</em>{1}}, \cdots, v<em>{w</em>{t-1}}$，输出为一个可以表示历史信息的向量$h_{t}$</p>
 <ul>
 <li>简单加权平均</li>
 <li>前馈神经网络</li>
@@ -216,10 +216,12 @@
 </ul>
 </li>
 </ul>
-<h1 id="2-以cbow为例"><a href="#2-以cbow为例" class="headerlink" title="2. 以cbow为例"></a><font size="4">2. 以cbow为例</font></h1><p>（１）目标函数<br>$$<br>\mathcal{L}<em>{\theta} = -\frac{1}{T} \sum^{T}</em>{t=1} \log p(w_t | c_t)<br>$$</p>
-<p>（２）负采样方法: 可以看成是噪声对比估计方法的简化，即设置 $kQ(w)=1$，将原问题转化为二分类问题。对于小规模数据，$k$ 的取值范围是<code>5 ~ 20</code>，对于大规模数据，<code>k</code>可以取<code>2~5</code>。</p>
-<h1 id="3-以skip-gram为例介绍"><a href="#3-以skip-gram为例介绍" class="headerlink" title="3. 以skip-gram为例介绍"></a><font size="4">3. 以skip-gram为例介绍</font></h1><p>（１）目标函数<br>$$<br>\mathcal{L}<em>{\theta} = -\frac{1}{T} \sum</em>{t=1}^T \sum_{-n \leqslant j \leqslant n, j \neq 0} \log P(w_{t+j} | w_t)<br>$$</p>
-<p>（２）Word2Vec的工作流程</p>
+<h1 id="2-以cbow为例"><a href="#2-以cbow为例" class="headerlink" title="2. 以cbow为例"></a><font size="4">2. 以cbow为例</font></h1><p>（１）目标函数</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{\theta} = -\frac{1}{T} \sum^{T}_{t=1} \log p(w_t | c_t)</script><p>（２）负采样方法: 可以看成是噪声对比估计方法的简化，即设置 $kQ(w)=1$，将原问题转化为二分类问题。对于小规模数据，$k$ 的取值范围是<code>5 ~ 20</code>，对于大规模数据，<code>k</code>可以取<code>2~5</code>。</p>
+<h1 id="3-以skip-gram为例介绍"><a href="#3-以skip-gram为例介绍" class="headerlink" title="3. 以skip-gram为例介绍"></a><font size="4">3. 以skip-gram为例介绍</font></h1><p>（１）目标函数</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{\theta} = -\frac{1}{T} \sum_{t=1}^T \sum_{-n \leqslant j \leqslant n, j \neq 0} \log P(w_{t+j} | w_t)</script><p>（２）Word2Vec的工作流程</p>
 <ul>
 <li><strong>只是一个三层的神经网络</strong></li>
 <li>喂给模型一个<code>word</code>，然后用来预测它周边的词</li>
@@ -228,14 +230,8 @@
 </ul>
 <blockquote>
 <p>第一步：获取 input output pair，也就是获取目标词的周边词，获取前n个词和后n个词，这里的n就是<code>window_size</code></p>
-</blockquote>
-<blockquote>
 <p>第二步：准备训练数据，将训练样本打包成<code>[word, nb_word]</code>的形式，<code>word</code>就是模型的输入，<code>nb_word</code>就是该词周边的单词</p>
-</blockquote>
-<blockquote>
 <p>第三步：将之前准备的数据中的单词转换成 <code>one-hot</code>的形式</p>
-</blockquote>
-<blockquote>
 <p>第四步：利用tensorflow建立模型</p>
 </blockquote>
 <h1 id="4-实战"><a href="#4-实战" class="headerlink" title="4. 实战"></a><font size="4">4. 实战</font></h1><p>（1）以 <code>the quick brown fox jumped over the lazy dog</code>为例：</p>
@@ -754,5 +750,38 @@ MathJax.Hub.Queue(function() {
 
 </div>
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
 </body>
 </html>
