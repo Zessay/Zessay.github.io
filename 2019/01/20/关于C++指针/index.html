@@ -6,15 +6,25 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="https://zessay.github.io">
-  <title>Archives | Zessay的博客</title>
+  <title>关于C++指针 | Zessay的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Zessay的博客">
-<meta property="og:url" content="https://zessay.github.io/archives/index.html">
+  <meta name="description" content="主要介绍一些关于C++指针的知识">
+<meta name="keywords" content="编程,C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于C++指针">
+<meta property="og:url" content="https://zessay.github.io/2019/01/20/关于C++指针/index.html">
 <meta property="og:site_name" content="Zessay的博客">
+<meta property="og:description" content="主要介绍一些关于C++指针的知识">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://www.runoob.com/wp-content/uploads/2014/09/pointer_to_pointer.jpg">
+<meta property="og:image" content="https://images2017.cnblogs.com/blog/1287224/201712/1287224-20171205192649347-770389909.jpg">
+<meta property="og:image" content="https://images2017.cnblogs.com/blog/1287224/201712/1287224-20171205204220784-718862175.jpg">
+<meta property="og:image" content="https://images2017.cnblogs.com/blog/1287224/201712/1287224-20171205210211628-1586906130.jpg">
+<meta property="og:updated_time" content="2019-09-13T11:17:36.495Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Zessay的博客">
+<meta name="twitter:title" content="关于C++指针">
+<meta name="twitter:description" content="主要介绍一些关于C++指针的知识">
+<meta name="twitter:image" content="http://www.runoob.com/wp-content/uploads/2014/09/pointer_to_pointer.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Zessay的博客" type="application/atom+xml">
   
@@ -152,567 +162,355 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-关于C++指针" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      关于C++指针
+    </h1>
+  
+
+        
+        <a href="/2019/01/20/关于C++指针/" class="archive-article-date">
+  	<time datetime="2019-01-20T14:30:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-20</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>主要介绍一些关于C++指针的知识</strong></p>
+<a id="more"></a>
+
+
+<h2 id="1-1-概述"><a href="#1-1-概述" class="headerlink" title="1.1 概述"></a><font size="3">1.1 概述</font></h2><p>&emsp;每一个变量都有一个内存位置，每一个内存为止都定义了可使用<strong>连字号(&amp;)</strong> 运算符访问的地址，它表示在内存中的一个地址。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> var1;</span><br><span class="line">    <span class="keyword">char</span> var2[<span class="number">10</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"var1的变量地址："</span> &lt;&lt; &amp;var1 &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"var2的变量地址："</span> &lt;&lt; &amp;var2 &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;指针时一个变量，其值为另一个变量的地址，即<strong>内存位置的直接地址</strong>。项其他变量或倡廉狗一样，必须在使用指针存储其他变量地址之前，对其进行声明；</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type *var_name</span><br></pre></td></tr></table></figure>
+
+<p>这里的<code>type</code>表示的是<strong>指针的基类型</strong>，<code>var_name</code>表示指针变量的名称，<code>*</code>用来表明一个变量是指针。所有<strong>指针值的实际数据类型</strong>，不管基类型是<code>int</code>, <code>float</code>还是<code>char</code>，<font color="blue"><strong>都是一个代表内存地址的长的十六进制数</strong></font>。</p>
+<h2 id="1-2-常用的指针操作"><a href="#1-2-常用的指针操作" class="headerlink" title="1.2 常用的指针操作"></a><font size="3">1.2 常用的指针操作</font></h2><ul>
+<li>定义一个指针变量</li>
+<li>把变量地址赋值给指针</li>
+<li>访问指针变量中可用地址的值</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> var = <span class="number">20</span>; <span class="comment">// 实际变量的声明</span></span><br><span class="line">    <span class="keyword">int</span> *ip;</span><br><span class="line">    </span><br><span class="line">    ip = &amp;var;  <span class="comment">// 在指针变量中存储var的地址</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 输出指针变量中存储的地址</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; ip &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 访问指针中地址的值</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; *ip &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-3-C-的Null指针"><a href="#1-3-C-的Null指针" class="headerlink" title="1.3 C++的Null指针"></a><font size="3">1.3 C++的Null指针</font></h2><p>&emsp;在变量声明时，如果没有确切的其值可以赋值，为指针变量赋一个<code>NULL</code>值是一个很好的习惯，表示<strong>空指针</strong>。<code>NULL</code>是标准库中<strong>值为0的常量</strong>。</p>
+<p>&emsp;大多数操作系统<strong>不允许访问地址为0的内存</strong>，这是系统保留的。程序中内存地址为0，表示<strong>该指针不指向一个可访问的内存地址</strong>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(ptr)    <span class="comment">// 如果ptr为非空，则执行条件语句中的操作</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="1-4-指针的算术运算"><a href="#1-4-指针的算术运算" class="headerlink" title="1.4 指针的算术运算"></a><font size="3">1.4 指针的算术运算</font></h2><p>&emsp;==指针是一个用数值表示的地址==，因此可以对指针执行<strong>算术运算</strong>，可以进行<code>++</code>, <code>--</code>, <code>+</code>, <code>-</code>4种运算。</p>
+<p>&emsp;执行<code>ptr++</code>之后，<code>ptr</code><strong>向后移1个地址位（字节数与数据类型有关）</strong>，该运算不会影响内存位置中的实际值，只是<strong>移动到下一个内存位置</strong>。</p>
+<blockquote>
+<p><font size="3"><strong>递增一个指针</strong></font></p>
+</blockquote>
+<p>&emsp;我们常<strong>用指针代替数组</strong>，因为变量指针可以递增，而数组指针不可以递增，因为<strong>数组是一个常量指针</strong>。我们可以递增变量指针，以便访问数组中的每一个元素。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAX=<span class="number">3</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> var[MAX] = &#123;<span class="number">10</span>, <span class="number">100</span>, <span class="number">200</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> *ptr;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 指针中的数组地址</span></span><br><span class="line">    ptr = var;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;MAX; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"var["</span> &lt;&lt;i&lt;&lt;<span class="string">"]的地址是："</span> &lt;&lt;ptr&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"var["</span>&lt;&lt;i&lt;&lt;<span class="string">"]的值是："</span>&lt;&lt;*ptr&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//移动到下一个位置</span></span><br><span class="line">        ptr++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>类似地，也可以 <strong>==递减遍历数组==</strong>。</p>
+<h2 id="1-5-指针的比较"><a href="#1-5-指针的比较" class="headerlink" title="1.5 指针的比较"></a><font size="3">1.5 指针的比较</font></h2><p>&emsp;指针可以用关系运算符进行比较，如<code>==</code>, <code>&lt;</code>和<code>&gt;</code>，如果<code>p1</code>和<code>p2</code><strong>指向两个相关的变量</strong>，比如同一个数组中的不同元素，则可对p1和p2进行大小比较。</p>
+<p>&emsp;比如，我们也可以通过如下方式遍历数组：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAX=<span class="number">3</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> var[MAX] =&#123;<span class="number">10</span>, <span class="number">100</span>, <span class="number">200</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> *ptr;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 指针中第一个元素的地址</span></span><br><span class="line">    ptr = var;</span><br><span class="line">    <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(ptr &lt;= &amp;var[MAX<span class="number">-1</span>])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"地址为："</span> &lt;&lt; ptr &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"值为："</span> &lt;&lt; *ptr &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 指向下一个位置</span></span><br><span class="line">        ptr++;</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-6-指针和数组"><a href="#1-6-指针和数组" class="headerlink" title="1.6 指针和数组"></a><font size="3">1.6 指针和数组</font></h2><p>&emsp;如上面所述，很多时候，<strong>指针和数组是可以互换的</strong>；然而，<strong>指针和数组并不是完全等价的</strong>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAX=<span class="number">3</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> var[MAX] = &#123;<span class="number">10</span>, <span class="number">100</span>, <span class="number">200</span>&#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;MAX; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        *var=i;   <span class="comment">// 这是正确的语法</span></span><br><span class="line">        var++;    <span class="comment">// 这是不正确的</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;把指针运算符<code>*</code>应用到<code>var</code>上是完全可以的，但是<strong>修改<code>var</code>的值是非法的</strong>。因为<code>var</code>是<strong>一个指向数组开头的常量，不能作为左值</strong>。由于一个数组名对应一个指针常量，只要不改变数组的值，仍然可以用指针形式的表达式。比如可以通过<code>*(var+2)=500</code>到达对<code>var[2]</code>赋值为<code>500</code>的目的。</p>
+<h2 id="1-7-指针数组"><a href="#1-7-指针数组" class="headerlink" title="1.7 指针数组"></a><font size="3">1.7 指针数组</font></h2><p>&emsp;如果我们想让数组存储指向<code>int</code>或<code>char</code>或其他类型的指针，可以<strong>使用指向某个类型的指针数组的声明</strong>。如可以声明一个指向整数的指针数组</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *ptr[MAX];</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;<code>ptr</code>是一个数组，由<code>MAX</code>个整数指针组成，因此<code>ptr</code>中的每个元素，都是一个指向<code>int</code>值的指针。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAX=<span class="number">3</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> var[MAX] = &#123;<span class="number">10</span>, <span class="number">100</span>, <span class="number">200</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> *ptr[MAX];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;MAX; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        ptr[i] = &amp;var[i];  <span class="comment">// 赋值为整数的地址</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果要输出其中的值的话，可以按下列方式</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;MAX; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"值为："</span> &lt;&lt; *ptr[i] &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>也可以用一个指向字符的指针数组来存储一个字符串列表</strong>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAX = <span class="number">4</span>;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"> <span class="keyword">const</span> <span class="keyword">char</span> *names[MAX] = &#123;</span><br><span class="line">                   <span class="string">"Zara Ali"</span>,</span><br><span class="line">                   <span class="string">"Hina Ali"</span>,</span><br><span class="line">                   <span class="string">"Nuha Ali"</span>,</span><br><span class="line">                   <span class="string">"Sara Ali"</span>,</span><br><span class="line">   &#125;;</span><br><span class="line"> </span><br><span class="line">   <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; MAX; i++)</span><br><span class="line">   &#123;</span><br><span class="line">      <span class="built_in">cout</span> &lt;&lt; <span class="string">"Value of names["</span> &lt;&lt; i &lt;&lt; <span class="string">"] = "</span>;</span><br><span class="line">      <span class="built_in">cout</span> &lt;&lt; names[i] &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-8-指向指针的指针"><a href="#1-8-指向指针的指针" class="headerlink" title="1.8 指向指针的指针"></a><font size="3">1.8 指向指针的指针</font></h2><p>&emsp;指向指针的指针是一种<strong>多级间接寻址</strong>的形式，或者说是一个<strong>指针链</strong>。当我们定义一个指向指针的指针时，<strong>第一个指针包含了第二个指针的地址，第二个指针指向包含实际值的位置</strong>。</p>
+<p><img src="http://www.runoob.com/wp-content/uploads/2014/09/pointer_to_pointer.jpg" alt="指向指针的指针"></p>
+<p>&emsp;一个指向指针的指针变量，声明时<strong>必须在变量名前放两个星号</strong>。如声明一个指向<code>int</code>类型指针的指针：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> **var;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;同样，当一个目标值被一个指针间接指向到另一个指针时，<strong>访问这个值需要使用两个星号运算符</strong>，如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span>  var;</span><br><span class="line">    <span class="keyword">int</span>  *ptr;</span><br><span class="line">    <span class="keyword">int</span>  **pptr;</span><br><span class="line"> </span><br><span class="line">    var = <span class="number">3000</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 获取 var 的地址</span></span><br><span class="line">    ptr = &amp;var;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 使用运算符 &amp; 获取 ptr 的地址</span></span><br><span class="line">    pptr = &amp;ptr;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 使用 pptr 获取值</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"var 值为 :"</span> &lt;&lt; var &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"*ptr 值为:"</span> &lt;&lt; *ptr &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"**pptr 值为:"</span> &lt;&lt; **pptr &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-8-传递指针给函数"><a href="#1-8-传递指针给函数" class="headerlink" title="1.8 传递指针给函数"></a><font size="3">1.8 传递指针给函数</font></h2><p>&emsp;C++允许传递指针给函数，<strong>只需要简单地声明函数参数为指针类型</strong>即可。比如我们传递一个无符号<code>long</code>型指针给函数，并在函数内改变该值：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctime&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">getSeconds</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">long</span> *par)</span></span>;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="keyword">unsigned</span> <span class="keyword">long</span> sec;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">   getSeconds( &amp;sec );</span><br><span class="line"> </span><br><span class="line">   <span class="comment">// 输出实际值</span></span><br><span class="line">   <span class="built_in">cout</span> &lt;&lt; <span class="string">"Number of seconds :"</span> &lt;&lt; sec &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"> </span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">getSeconds</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">long</span> *par)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="comment">// 获取当前的秒数</span></span><br><span class="line">   *par = time( <span class="literal">NULL</span> );</span><br><span class="line">   <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>能接受指针作为参数的函数，也能接受数组作为参数</strong>。</p>
+<h2 id="1-9-从函数返回指针"><a href="#1-9-从函数返回指针" class="headerlink" title="1.9 从函数返回指针"></a><font size="3">1.9 从函数返回指针</font></h2><p>&emsp;C++允许<strong>从函数返回指针</strong>，为了做到这点，必须<strong>声明一个返回指针的函数</strong>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> *<span class="title">myFunction</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123; ... &#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;<em>C++不支持在函数外返回局部变量的地址，除非定义局部变量为<code>static</code>变量</em>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctime&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdlib&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 要生成和返回随机数的函数</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> * <span class="title">getRandom</span><span class="params">( )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">int</span>  r[<span class="number">10</span>];</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 设置种子</span></span><br><span class="line">  srand( (<span class="keyword">unsigned</span>)time( <span class="literal">NULL</span> ) );</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i)</span><br><span class="line">  &#123;</span><br><span class="line">    r[i] = rand();</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; r[i] &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">return</span> r;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 要调用上面定义函数的主函数</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="comment">// 一个指向整数的指针</span></span><br><span class="line">   <span class="keyword">int</span> *p;</span><br><span class="line"> </span><br><span class="line">   p = getRandom();</span><br><span class="line">   <span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++ )</span><br><span class="line">   &#123;</span><br><span class="line">       <span class="built_in">cout</span> &lt;&lt; <span class="string">"*(p + "</span> &lt;&lt; i &lt;&lt; <span class="string">") : "</span>;</span><br><span class="line">       <span class="built_in">cout</span> &lt;&lt; *(p + i) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">   &#125;</span><br><span class="line"> </span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-10-小结"><a href="#1-10-小结" class="headerlink" title="1.10 小结"></a><font size="3">1.10 小结</font></h2><blockquote>
+<p><strong>变量（Variable）</strong></p>
+</blockquote>
+<p>&emsp;<strong>当我们声明一个变量时，计算机会将指定的一块内存空间和变量名进行绑定</strong>。比如，定义<code>int x=5;</code>，实际上是<strong>申请了一个名为<code>x</code>的内存空间，并将<code>5</code>赋值于该空间</strong>。<code>x</code>只是一个简单的别名，不等于任何值。</p>
+<p>&emsp;如果对变量操作，需要经过2个步骤：</p>
+<ul>
+<li><strong>找出与变量名相对应的内存地址</strong></li>
+<li><strong>根据找到的地址，取出该地址对应的内存空间中的值进行操作</strong></li>
+</ul>
+<blockquote>
+<p><strong>指针（pointer）</strong></p>
+</blockquote>
+<p>&emsp;指针变量和任何变量一样，<strong>有变量名和这个变量名对应的内存空间</strong>，只是指针变量的特殊之处在于：<font color="red">指针变量对应的内存空间存储的值恰好是某个内存地址</font>。如</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> x=<span class="number">5</span>;</span><br><span class="line"><span class="keyword">int</span> *ptr=&amp;x;</span><br></pre></td></tr></table></figure>
+
+<p><code>ptr</code>是一个指针变量名，<strong>通过指针获取这个指针指向的内存中的值</strong>称为<code>dereference</code>。<br><img src="https://images2017.cnblogs.com/blog/1287224/201712/1287224-20171205192649347-770389909.jpg" alt="dereference"></p>
+<p>所以说，<strong>==指针变量和任何变量在内存中的形式是相同的，仅仅在于其存储的值比较特殊==</strong>。</p>
+<blockquote>
+<p><strong>引用（reference）</strong></p>
+</blockquote>
+<p>&emsp;实际上，<strong><code>reference</code>是一种特殊的<code>pointer</code>，</strong>。所以说，<code>reference</code>在内存中的存储结构应该跟上面的指针是一样的，<em>也是存储的一块内存的地址</em>。如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> x=<span class="number">5</span>;</span><br><span class="line"><span class="keyword">int</span> &amp;y=x;</span><br></pre></td></tr></table></figure>
+
+<p><code>reference</code>和<code>pointer</code>的主要区别有以下3点：</p>
+<ul>
+<li><code>reference</code>不需要<code>dereference</code>即可直接获取到指向的内存空间的值；如上例中，直接<code>y</code>就能获取引用<code>y</code>指向的内存空间的值，而不需要<code>*y</code>。</li>
+<li><code>reference</code>的赋值操作也<strong>不需要取地址符来赋值</strong>，可以直接通过变量名；如<code>int &amp;y=x;</code>而不需要<code>int &amp;y=&amp;x;</code>。</li>
+<li><code>reference</code>在申明时必须有初始值，而且<code>reference</code>变量指向的内存地址是不能变化的，不像<code>pointer</code>那样可以很灵活地重新指向其他地址。</li>
+</ul>
+<p><img src="https://images2017.cnblogs.com/blog/1287224/201712/1287224-20171205204220784-718862175.jpg" alt="引用和指针"></p>
+<blockquote>
+<p><strong>指针在数组中的应用</strong></p>
+</blockquote>
+<p>&emsp;一个数组类型的变量<code>arr</code>，本质是<strong>一个指向数组第一个元素的指针</strong>。字符串<code>string</code>在C++其实就是一个<code>char</code>类型的数组。如<code>char arr[] = {&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39;,&#39;\0&#39;};</code>表示一串字符串<code>&quot;abcde&quot;</code>，其中<code>arr[0],arr[1], arr[2], ...</code>之间相差的数值可能并不是<code>1byte</code>，要<strong>根据这个数组的类型来判断</strong>。</p>
+<p>&emsp;C++中的字符串也可以通过<strong>字符串常量<code>（string literals）</code></strong> 的方式来表示，即<code>char *arr2 = &quot;abcde&quot;;</code>，但是通过字符串常来那个表示的字符串是<strong>只读的<code>read only</code></strong>，不能修改，比如<code>*(arr+2)=&#39;f&#39;;</code>会报错。</p>
+<p><img src="https://images2017.cnblogs.com/blog/1287224/201712/1287224-20171205210211628-1586906130.jpg" alt="数组"></p>
+<blockquote>
+<p><strong>指针不能dereference的情况</strong></p>
+</blockquote>
+<ul>
+<li>==当指针的值是<code>NULL</code>的时候，指针是不能<code>dereference</code>的==。因为指针为<code>NULL</code>表示指向内存地址为<code>0</code>的地址块，而地址为0内存块中是没有值的，所以会报错。如<code>int *ptr=NULL;cout &lt;&lt;*ptr&lt;&lt;endl;</code>是错误的。</li>
+</ul>
+<ul>
+<li>==当某个指针被释放（<code>deallocate</code>）或者某个指挥着呢所在的内存空间被限制==，指针也是不能被<code>dereference</code>。如：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> *<span class="title">function</span><span class="params">(<span class="keyword">int</span> a)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> temp=<span class="number">5</span>;</span><br><span class="line">    <span class="keyword">return</span> &amp;temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>这里的<code>temp</code>是局部变量，所以出了作用域会被系统回收，所以函数返回的指针时一个指向被限制的内存空间。要想这个函数能够达到想要的效果，需要将<code>temp</code>定义为<strong>静态变量（<code>static</code>）类型</strong>。</p>
+<hr>
+<blockquote>
+<p><strong>参考文章</strong></p>
+</blockquote>
+<p><a href="http://www.runoob.com/cplusplus/cpp-pointers.html" target="_blank" rel="noopener">http://www.runoob.com/cplusplus/cpp-pointers.html</a></p>
+<p><a href="https://www.cnblogs.com/tangxiaobo199181/p/7989464.html" target="_blank" rel="noopener">https://www.cnblogs.com/tangxiaobo199181/p/7989464.html</a></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>~~感谢款待~~<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/alipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/wechatpay.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/13/DL笔记-Attention/" class="archive-article-date">
-  	<time datetime="2019-09-13T08:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-13</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/13/DL笔记-Attention/">Deep Learning笔记——关于Attention</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Deep Learning</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">编程</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">深度学习</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">C++</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/深度学习//" class="article-tag-list-link color5">深度学习</a>
+        			<a href="/categories/C//" class="article-tag-list-link color4">C++</a>
         		</li>
       		
 		</ul>
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=https://zessay.github.io/2019/01/20/关于C++指针/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/10/ML笔记-从SGD到Adam/" class="archive-article-date">
-  	<time datetime="2019-09-10T01:30:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-10</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2019/03/01/如果青春有颜色/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          如果青春有颜色
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/01/20/机器学习领域顶会及团队汇总/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">机器学习领域顶会及团队汇总</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/10/ML笔记-从SGD到Adam/">Deep Learning笔记——从SGD到Adam</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Deep Learning</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">深度学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/深度学习//" class="article-tag-list-link color5">深度学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-概述"><span class="toc-number">1.</span> <span class="toc-text">1.1 概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-常用的指针操作"><span class="toc-number">2.</span> <span class="toc-text">1.2 常用的指针操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-C-的Null指针"><span class="toc-number">3.</span> <span class="toc-text">1.3 C++的Null指针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-指针的算术运算"><span class="toc-number">4.</span> <span class="toc-text">1.4 指针的算术运算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-5-指针的比较"><span class="toc-number">5.</span> <span class="toc-text">1.5 指针的比较</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-6-指针和数组"><span class="toc-number">6.</span> <span class="toc-text">1.6 指针和数组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-7-指针数组"><span class="toc-number">7.</span> <span class="toc-text">1.7 指针数组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-8-指向指针的指针"><span class="toc-number">8.</span> <span class="toc-text">1.8 指向指针的指针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-8-传递指针给函数"><span class="toc-number">9.</span> <span class="toc-text">1.8 传递指针给函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-9-从函数返回指针"><span class="toc-number">10.</span> <span class="toc-text">1.9 从函数返回指针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-10-小结"><span class="toc-number">11.</span> <span class="toc-text">1.10 小结</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/09/NLP笔记-从HMM到CRF/" class="archive-article-date">
-  	<time datetime="2019-09-09T14:30:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/09/NLP笔记-从HMM到CRF/">NLP笔记——从HMM到CRF</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">自然语言处理</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">NLP</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/深度学习//" class="article-tag-list-link color5">深度学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/08/NLP笔记-FastText/" class="archive-article-date">
-  	<time datetime="2019-09-08T14:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/08/NLP笔记-FastText/">NLP笔记——FastText</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">自然语言处理</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">NLP</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">论文</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/论文//" class="article-tag-list-link color3">论文</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/08/ML笔记-DNN和CNN/" class="archive-article-date">
-  	<time datetime="2019-09-08T09:30:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/08/ML笔记-DNN和CNN/">Deep Learning笔记——DNN &amp; CNN</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Deep Learning</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">深度学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/深度学习//" class="article-tag-list-link color5">深度学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/06/DL笔记-XGBoost/" class="archive-article-date">
-  	<time datetime="2019-09-06T02:30:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/06/DL笔记-XGBoost/">Machine Learning笔记——XGBoost &amp; LightGBM</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Machine Learning</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">机器学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/机器学习//" class="article-tag-list-link color5">机器学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/01/DL笔记-SVM/" class="archive-article-date">
-  	<time datetime="2019-09-01T04:30:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-01</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/01/DL笔记-SVM/">Machine Learning笔记——SVM</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Machine Learning</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">机器学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/机器学习//" class="article-tag-list-link color5">机器学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/08/31/ML笔记-RNN_eq/" class="archive-article-date">
-  	<time datetime="2019-08-31T14:30:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-31</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/08/31/ML笔记-RNN_eq/">Deep Learning笔记——RNN&amp;LSTM&amp;GRU</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Deep Learning</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">深度学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/深度学习//" class="article-tag-list-link color5">深度学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/08/09/NLP笔记-Word2Vec/" class="archive-article-date">
-  	<time datetime="2019-08-09T11:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/08/09/NLP笔记-Word2Vec/">NLP笔记——Wor2Vec</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">自然语言处理</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">NLP</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">论文</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/论文//" class="article-tag-list-link color3">论文</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/08/09/NLP笔记-Glove_and_CoVe/" class="archive-article-date">
-  	<time datetime="2019-08-09T10:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/08/09/NLP笔记-Glove_and_CoVe/">NLP笔记——GloVe &amp; CoVe</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">自然语言处理</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">NLP</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">论文</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/论文//" class="article-tag-list-link color3">论文</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/2/">Next &raquo;</a>
-    </nav>
+  
+
+  
+  <div id="gitalk-container" style="padding: 0px 30px 0px 30px;"></div> 
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script type="text/javascript">
+
+if(true){
+	var gitalk = new Gitalk({
+  	clientID: '669c4316b3f5f08a2228',
+  	clientSecret: '42797e0b5c99ec021eea5fe88effe6cb4e2ad7e4',
+  	repo: 'blogComments',
+  	owner: 'Zessay',
+  	admin: ['Zessay'],
+  	id: 'Sun Jan 20 2019 22:30:00 GMT+0800',
+  	distractionFreeMode: 'true'
+})
+gitalk.render('gitalk-container') 
+}
+</script>
+
+  
+
+  
+
   
 
 
@@ -736,8 +534,8 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

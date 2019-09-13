@@ -6,15 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="https://zessay.github.io">
-  <title>Archives | Zessay的博客</title>
+  <title>关于TFRecords和tf.Example的使用 | Zessay的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Zessay的博客">
-<meta property="og:url" content="https://zessay.github.io/archives/index.html">
+  <meta name="description" content="&amp;emsp;为了高效地读取数据，可以将数据进行序列化存储，这样也便于网络流式读取数据。TFRecord是一种比较常用的存储二进制序列数据的方法，基于Google的Protocol buffers格式的数据。 &amp;emsp;tf.Example类是一种将数据表示为{&amp;quot;string&amp;quot;: value}形式的meassage类型，Tensorflow经常使用tf.Example来写入、读">
+<meta name="keywords" content="深度学习,Tensorflow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于TFRecords和tf.Example的使用">
+<meta property="og:url" content="https://zessay.github.io/2019/07/12/TF笔记-关于TFRecords和tf.Example的使用/index.html">
 <meta property="og:site_name" content="Zessay的博客">
+<meta property="og:description" content="&amp;emsp;为了高效地读取数据，可以将数据进行序列化存储，这样也便于网络流式读取数据。TFRecord是一种比较常用的存储二进制序列数据的方法，基于Google的Protocol buffers格式的数据。 &amp;emsp;tf.Example类是一种将数据表示为{&amp;quot;string&amp;quot;: value}形式的meassage类型，Tensorflow经常使用tf.Example来写入、读">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-09-13T11:17:36.495Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Zessay的博客">
+<meta name="twitter:title" content="关于TFRecords和tf.Example的使用">
+<meta name="twitter:description" content="&amp;emsp;为了高效地读取数据，可以将数据进行序列化存储，这样也便于网络流式读取数据。TFRecord是一种比较常用的存储二进制序列数据的方法，基于Google的Protocol buffers格式的数据。 &amp;emsp;tf.Example类是一种将数据表示为{&amp;quot;string&amp;quot;: value}形式的meassage类型，Tensorflow经常使用tf.Example来写入、读">
   
     <link rel="alternative" href="/atom.xml" title="Zessay的博客" type="application/atom+xml">
   
@@ -152,52 +157,176 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-TF笔记-关于TFRecords和tf.Example的使用" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      关于TFRecords和tf.Example的使用
+    </h1>
+  
+
+        
+        <a href="/2019/07/12/TF笔记-关于TFRecords和tf.Example的使用/" class="archive-article-date">
+  	<time datetime="2019-07-12T02:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-12</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>&emsp;为了高效地读取数据，可以将数据进行序列化存储，这样也便于网络流式读取数据。<code>TFRecord</code>是一种比较常用的存储二进制序列数据的方法，基于Google的<a href="https://developers.google.com/protocol-buffers/" target="_blank" rel="noopener">Protocol buffers</a>格式的数据。</p>
+<p>&emsp;<code>tf.Example</code>类是一种将数据表示为<code>{&quot;string&quot;: value}</code>形式的meassage类型，Tensorflow经常使用<code>tf.Example</code>来写入、读取<code>TFRecord</code>数据。</p>
+<a id="more"></a>
+
+<h1 id="1-关于tf-Example"><a href="#1-关于tf-Example" class="headerlink" title="1. 关于tf.Example"></a><font size="4">1. 关于<code>tf.Example</code></font></h1><h2 id="1-1-tf-Example的数据类型"><a href="#1-1-tf-Example的数据类型" class="headerlink" title="1.1 tf.Example的数据类型"></a><font size="3">1.1 <code>tf.Example</code>的数据类型</font></h2><p>&emsp;一般来说，<code>tf.Example</code>都是<code>{&quot;string&quot;: tf.train.Feature}</code>这样的键值映射形式。其中，<code>tf.train.Feature</code>类可以使用以下3种类型</p>
+<ul>
+<li><p><strong><code>tf.train.BytesList</code></strong>: 可以使用的类型包括 <strong><code>string</code>和<code>byte</code></strong></p>
+</li>
+<li><p><strong><code>tf.train.FloatList</code></strong>: 可以使用的类型包括 <strong><code>float</code>和<code>double</code></strong> </p>
+</li>
+<li><p><strong><code>tf.train.Int64List</code></strong>: 可以使用的类型包括 <strong><code>enum</code>,<code>bool</code>, <code>int32</code>, <code>uint32</code>, <code>int64</code>以及<code>uint64</code></strong>。</p>
+</li>
+</ul>
+<p>&emsp;为了将常用的数据类型(<em>标量或list</em>)，转化为<code>tf.Example</code>兼容的<code>tf.train.Feature</code>类型，通过使用以下几个接口函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这里括号中的value是一个标量</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_bytes_feature</span><span class="params">(value)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_float_feature</span><span class="params">(value)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> tf.train.Feature(float_list=tf.train.FloatList(value=[value]))</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_int64_feature</span><span class="params">(value)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>为了示例的简洁，这里只是使用了变量。如果想要对张量进行处理，常用的方法是：使用<code>tf.serialize_tensor</code>函数将张量转化为二进制字符，然后使用<code>_bytes_feature()</code>进行处理；读取的时候使用<code>tf.parse_tensor</code>对二进制字符转换为<code>Tensor</code>类型。</p>
+</blockquote>
+<p>&emsp;下面举一个简单例子了解一下，经过<code>tf.train.Feature</code>转换之后的结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">print(_bytes_feature(<span class="string">b'test_string'</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出为: </span></span><br><span class="line"><span class="comment">## bytes_list &#123;</span></span><br><span class="line"><span class="comment">##   value: "test_string"    </span></span><br><span class="line"><span class="comment">## &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>&emsp;所有的<code>proto meassages</code>都可以通过<code>.SerializeToString</code>方法转换为二进制字符串</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">feature = _float_feature(np.exp(<span class="number">1</span>))</span><br><span class="line">feature.SerializeToString()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出为：b'\x12\x06\n\x04T\xf8-@'</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="1-2-创建一个tf-Example数据"><a href="#1-2-创建一个tf-Example数据" class="headerlink" title="1.2 创建一个tf.Example数据"></a><font size="3">1.2 创建一个<code>tf.Example</code>数据</font></h2><p>&emsp;无论是什么类型，基于已有的数据构造<code>tf.Example</code>数据的流程是相同的：</p>
+<ul>
+<li><p>对于一个观测值，需要转化为上面所说的<code>tf.train.Feature</code>兼容的3种类型之一；</p>
+</li>
+<li><p>构造一个字典映射，键<code>key</code>是string型的<code>feature</code>名称，值<code>value</code><br>是第1步中转换得到的值；</p>
+</li>
+<li><p>第2步中得到的映射会被转换为<code>Features</code>类型的数据</p>
+</li>
+</ul>
+<blockquote>
+<p>假设存在一个数据集，包含4个特征：1个bool型，1个int型，1个string型以及1个float型；假设数据集的数量为<code>10000</code>：</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">n_obeservations = int(<span class="number">1e4</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># bool类型的特征</span></span><br><span class="line">feature0 = np.random.choice([<span class="literal">False</span>, <span class="literal">True</span>], n_observations)</span><br><span class="line"></span><br><span class="line"><span class="comment"># int型特征</span></span><br><span class="line">feature1 = np.random.randint(<span class="number">0</span>, <span class="number">5</span>, n_observations)</span><br><span class="line"></span><br><span class="line"><span class="comment"># string型特征</span></span><br><span class="line">strings = np.array([<span class="string">b'cat'</span>, <span class="string">b'dog'</span>, <span class="string">b'chicken'</span>, <span class="string">b'horse'</span>, <span class="string">b'goat'</span>])</span><br><span class="line">feature2 = strings[feature1]</span><br><span class="line"></span><br><span class="line"><span class="comment"># float型特征</span></span><br><span class="line">feature3 = np.random.randn(n_observations)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;定义一个将各种类型封装的序列化函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">serialize</span><span class="params">(feature0, feature1, feature2, feature3)</span>:</span></span><br><span class="line">    feature = &#123;</span><br><span class="line">        <span class="string">"feature0"</span>: _int64_feature(feature0),</span><br><span class="line">        <span class="string">"feature1"</span>: _int64_feature(feature1),</span><br><span class="line">        <span class="string">"feature2"</span>: _bytes_feature(feature2),</span><br><span class="line">        <span class="string">"feature3"</span>: _float_feature(feature3),</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 使用tf.train.Example创建Features的message</span></span><br><span class="line">    example_proto = tf.train.Example(features=tf.train.Features(feature=feature))</span><br><span class="line">    <span class="keyword">return</span> example_proto.SerializeToString()</span><br><span class="line"></span><br><span class="line"><span class="comment">## Example</span></span><br><span class="line">serialized_example = serialize_example(<span class="literal">False</span>, <span class="number">4</span>, <span class="string">b'goat'</span>, <span class="number">0.9876</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">## 使用tf.train.Example.FromString可视化结果</span></span><br><span class="line">example_proto = tf.train.Example.FromString(serialized_example)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="2-使用tf-data读写TFRecord"><a href="#2-使用tf-data读写TFRecord" class="headerlink" title="2. 使用tf.data读写TFRecord"></a><font size="4">2. 使用<code>tf.data</code>读写<code>TFRecord</code></font></h1><h2 id="2-1-写入TFRecord文件"><a href="#2-1-写入TFRecord文件" class="headerlink" title="2.1 写入TFRecord文件"></a><font size="3">2.1 写入TFRecord文件</font></h2><p>&emsp;最简单的将数据读入<code>dataset</code>中的方法，就是使用<code>tf.data.Dataset.from_tensor_slices</code>函数</p>
+<ul>
+<li>只应用到一个<code>array</code>则返回一个标量<code>dataset</code></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tf.data.Dataset.from_tensor_slices(feature1)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>应用到一个<code>array</code>组成的元组，则返回一个元组<code>dataset</code></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">features_dataset = tf.data.Dataset.from_tensor_slices((feature0, feature1, feature2, feature3))</span><br><span class="line"></span><br><span class="line"><span class="comment">## 如果想要从数据集中取一个样例</span></span><br><span class="line"><span class="keyword">for</span> f0, f1, f2, f3 <span class="keyword">in</span> features_dataset.take(<span class="number">1</span>):</span><br><span class="line">    print(f0)</span><br><span class="line">    <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: tf.Tensor(True, shape=[], dtype=bool)，注意这里输出的是一个Tensor类型的元素</span></span><br></pre></td></tr></table></figure>
+
+<p>&emsp;使用<code>tf.data.Dataset.map</code>方法对<code>Dataset</code>中的每一个元素使用相同的方法。需要注意的是：×<strong>该函数只能在<code>graph</code>模式下运行，也就是说必须在graph中定义并且返回<code>tf.Tensors</code>类型</strong>。上面定义的<code>serialize_example</code>并不是返回<code>tensor</code>的函数，需要使用<code>tf.py_function</code>函数包装使其可以兼容，于是将上面定义的函数进行改进。使用<code>tf.py_dunction</code>需要制定<code>shape</code>和<code>type</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">serialize_pyfunction</span><span class="params">(feature0, feature1, feature2, feature3)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 由于上面输出是Tensor类型，所以要使用.numpy()获取其中的值</span></span><br><span class="line">    feature = &#123;</span><br><span class="line">        <span class="string">"feature0"</span>: _int64_feature(feature0.numpy()), </span><br><span class="line">        <span class="string">"feature1"</span>: _int64_feature(feature1.numpy()),</span><br><span class="line">        <span class="string">"feature2"</span>: _bytes_feature(feature2.numpy()),</span><br><span class="line">        <span class="string">"feature3"</span>: _float_feature(feature3.numpy()),</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 使用tf.train.Example创建Features的message</span></span><br><span class="line">    example_proto = tf.train.Example(features=tf.train.Features(feature=feature))</span><br><span class="line">    <span class="keyword">return</span> example_proto.SerializeToString()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义包装函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">tf_serialize_example</span><span class="params">(f0 ,f1, f2, f3)</span>:</span></span><br><span class="line">    tf_string = tf.py_function(</span><br><span class="line">        serialize_pyfunction,</span><br><span class="line">        (f0,f1,f2,f3),</span><br><span class="line">        tf.string)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> tf.reshape(tf_string, ())  <span class="comment"># 结果是一个标量</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 对dataset中的每一个元素应用下面函数</span></span><br><span class="line">serialized_features_dataset = features_dataset.map(tf_serialize_example)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;<strong>将上面的结果写入TFRecord</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">filename = <span class="string">"test.tfrecord"</span></span><br><span class="line">writer = tf.data.experimental.TFRecordWriter(filename)</span><br><span class="line">writer.write(serialized_features_dataset)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;<font color="blue"><strong>但是由于上面这种方法较为复杂，我们通常使用新的方法写入TFRecord，即使用<code>tf.python_io</code>模块中读写TFRecord文件的类</strong></font>。</p>
+<p>&emsp;使用新的方法，就不需要再重新定义包装函数，而是可以对数据逐个写入，即：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tf.python_io.TFRecordWriter(filename) <span class="keyword">as</span> writer:</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n_observations):</span><br><span class="line">        example = serialize(feature0[i], feature1[i], feature2[i], feature3[i])</span><br><span class="line">        writer.write(example)</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-读取TFRecord文件"><a href="#2-2-读取TFRecord文件" class="headerlink" title="2.2 读取TFRecord文件"></a><font size="3">2.2 读取TFRecord文件</font></h2><p>&emsp;这里介绍使用最简单的<code>tf.data.TFRecordDataset</code>方法读取数据，这个方法可以将一个或多个TFRecord文件的内容作为输入管道的一部分进行流式传输。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">filenames = [<span class="string">"file1.tfrecord"</span>, <span class="string">"file2.tfrecord"</span>]</span><br><span class="line">dataset = tf.data.TFRecordDataset(filenames)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;<code>TFRecordDataset</code>的初始化<code>filenames</code>参数可以是<strong>字符串、字符串列表或者字符串<code>tf.Tensor</code></strong>；如果有两组分别用于训练和验证的文件，可以使用<code>tf.placeholder(tf.string)</code>来表示文件名，并使用适当的文件初始化迭代器</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">filenames = tf.placehoder(tf.string, shape=[<span class="literal">None</span>])</span><br><span class="line">dataset = tf.data.TFRecordDataset(filenames)</span><br><span class="line">dataset = dataset.map()   <span class="comment"># 将记录解码为Tensor</span></span><br><span class="line">dataset = dataset.repeat()  <span class="comment"># 无限重复输入</span></span><br><span class="line">dataset = dataset.batch(<span class="number">32</span>)</span><br><span class="line">iterator = dataset.make_initializable_iterator()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在不同的阶段，使用不同的值</span></span><br><span class="line">training_files = [<span class="string">"train1.tfrecord"</span>, <span class="string">"train2.tfrecord"</span>]</span><br><span class="line">sess.run([iterator.initializer], feed_dict=&#123;filenames: training_files&#125;)</span><br><span class="line"></span><br><span class="line">validation_files = []</span><br><span class="line">sess.run(iterator,initializer, feed_dict=&#123;filenames: validation_files&#125;)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="3-一个读写TFRecord的实例"><a href="#3-一个读写TFRecord的实例" class="headerlink" title="3. 一个读写TFRecord的实例"></a><font size="4">3. 一个读写TFRecord的实例</font></h1><blockquote>
+<p><strong>读阶段</strong></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np </span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf </span><br><span class="line">improt glob </span><br><span class="line"><span class="keyword">import</span> matplotlib.image <span class="keyword">as</span> mpimg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 写入阶段</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">images_to_tfrecords</span><span class="params">(data_path=<span class="string">"mnist/"</span>, shuffle=True, random_seed=None)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">int64_to_feature</span><span class="params">(value)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> tf.train.Feature(int64_list=tf.train.Int64List(value=value))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> s <span class="keyword">in</span> [<span class="string">"train"</span>, <span class="string">"valid"</span>, <span class="string">"test"</span>]:</span><br><span class="line">        <span class="keyword">with</span> tf.python_io.TFRecordWriter(<span class="string">"mnist_%s.tfrecords"</span>%s) <span class="keyword">as</span> writer:</span><br><span class="line">            img_paths = np.array([p <span class="keyword">for</span> p <span class="keyword">in</span> glob.iglob(</span><br><span class="line">                    <span class="string">"%s%s/**/*.jpg"</span> % (data_path, s), recursive=<span class="literal">True</span>)])</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> shuffle:</span><br><span class="line">                rng = np.random.RandomState(random)</span><br><span class="line">                rng.shuffle(img_paths)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">for</span> idx, path <span class="keyword">in</span> enumerate(img_paths):</span><br><span class="line">                label = int(os.path.basename(os.path.dirname(path)))</span><br><span class="line">                image = mpimg.imread(path)</span><br><span class="line">                image = image.reshape(<span class="number">-1</span>).tolist()</span><br><span class="line">                </span><br><span class="line">                example = tf.train.Example(features=tf.train.Features(</span><br><span class="line">                    features=&#123;</span><br><span class="line">                        <span class="string">"image"</span>: int64_to_feature(image),</span><br><span class="line">                        <span class="string">"label"</span>: int64_to_feature([label])</span><br><span class="line">                    &#125;))</span><br><span class="line">                writer.write(example.SerializeToString())</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>写阶段</strong></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_one_image</span><span class="params">(tfrecords_queue, normalize=True)</span>:</span></span><br><span class="line">    reader = tf.TFRecordReader()</span><br><span class="line">    key, value = reader.read(tfrecords_queue)</span><br><span class="line">    features = tf.parse_single_example(value, </span><br><span class="line">        features=&#123;<span class="string">"label"</span>: tf.FixedLenFeature([], tf.int64),</span><br><span class="line">            <span class="string">"image"</span>:tf.FixedLenFeature([<span class="number">784</span>], tf.int64)</span><br><span class="line">        &#125;)</span><br><span class="line">    label = tf.cast(features[<span class="string">'label'</span>], tf.int32)</span><br><span class="line">    image = tf.cast(features[<span class="string">'image'</span>], tf.float32)</span><br><span class="line">    onehot_label = tf.one_hot(indices=label, depth=<span class="number">10</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> normalize:</span><br><span class="line">        image = image / <span class="number">255</span></span><br><span class="line">    <span class="keyword">return</span> onehot_label, image</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">n_epochs = <span class="number">15</span> </span><br><span class="line">n_iter = n_epochs*(num_samples//batch_size)</span><br><span class="line"></span><br><span class="line">g = tf.Graph()</span><br><span class="line"><span class="keyword">with</span> g.as_default():</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 输入数据</span></span><br><span class="line">    queue = tf.train.string_input_producer([<span class="string">"mnist_train.tfrecords"</span>], num_epochs=<span class="literal">None</span>)</span><br><span class="line">    label, image = read_one_image(queue)</span><br><span class="line">    label_batch, image_batch = tf.train.shuffle_batch(</span><br><span class="line">                [label, image], batch_size=batch_size,</span><br><span class="line">                seed=random_seed, num_threads=<span class="number">8</span>,</span><br><span class="line">                capacity=<span class="number">5000</span>,</span><br><span class="line">                min_after_dequeue=<span class="number">2000</span>)</span><br><span class="line">    </span><br><span class="line">    tf_images = tf.placeholder_with_default(image_batch,</span><br><span class="line">                    shape=[<span class="literal">None</span>, <span class="number">784</span>], name=<span class="string">"images"</span>)</span><br><span class="line">    tf_labels = tf.placeholder_with_default(label_batch,</span><br><span class="line">                    shape=[<span class="literal">None</span>, <span class="number">10</span>], name=<span class="string">"labels"</span>)</span><br><span class="line">    [...]</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session(graph=g) <span class="keyword">as</span> sess:</span><br><span class="line">    sess.run(tf.global_variables_initializer())</span><br><span class="line">    saver0 = tf.train.Saver()</span><br><span class="line">    </span><br><span class="line">    <span class="comment">## 创建一个线程管理器</span></span><br><span class="line">    coord = tf.train.Coordinator()</span><br><span class="line">    <span class="comment">## 启动入队线程</span></span><br><span class="line">    threads = tf.train.start_queue_runners(sess=sess, coord=coord)</span><br><span class="line">    iter_per_epoch = n_iter // n_epochs</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n_iter):</span><br><span class="line">        [...]</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> i % iter_per_epoch:</span><br><span class="line">    </span><br><span class="line">    <span class="comment">## 发出终止所有线程的命令</span></span><br><span class="line">    coord.request_stop()</span><br><span class="line">    <span class="comment">## 把线程加入主线程，等待threads结束</span></span><br><span class="line">    coord.join(threads)</span><br><span class="line">    </span><br><span class="line">    [...]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>使用数据进行测试</strong></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">record_iterator = tf.python_io.tf_record_iterator(path=<span class="string">"mnist_test.tfrecords"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    <span class="comment">## 重建保存在meta文件中的graph</span></span><br><span class="line">    saver1 = tf.train.import_meta_graph(<span class="string">"./**.meta"</span>)</span><br><span class="line">    saver1.restore(sess, save_path=<span class="string">"./mlp"</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> idx, r <span class="keyword">in</span> enumerate(record_iterator):</span><br><span class="line">        example = tf.train.Example()</span><br><span class="line">        example.ParseFromString(r)</span><br><span class="line">        label = example.features.feature[<span class="string">'label'</span>].int64_list.value[<span class="number">0</span>]</span><br><span class="line">        image = example = np.array(example.features.feature[<span class="string">'image'</span>].int64_list.value)</span><br><span class="line">        </span><br><span class="line">        pred = sess.run(<span class="string">"prediction:0"</span>, feed_dict=&#123;<span class="string">"images:0"</span>: images.reshape(<span class="number">1</span>,<span class="number">784</span>)&#125;)</span><br><span class="line">        [...]</span><br></pre></td></tr></table></figure>
+
+<hr>
+<blockquote>
+<p><strong>参考链接</strong></p>
+</blockquote>
+<ul>
+<li><a href="https://www.tensorflow.org/tutorials/load_data/tf_records" target="_blank" rel="noopener">Tensorflow官方tfrecords使用教程</a></li>
+<li><a href="https://www.tensorflow.org/guide/datasets#consuming_tfrecord_data" target="_blank" rel="noopener">Tensorflow官方数据导入教程</a></li>
+<li><a href="https://github.com/Zessay/deeplearning-models/blob/e0a7fc8231cb17f57efa24aca10ae45e80a89905/tensorflow1_ipynb/mechanics/tfrecords.ipynb" target="_blank" rel="noopener">DeepLearing Models</a></li>
+</ul>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>~~感谢款待~~<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/alipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/wechatpay.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/13/DL笔记-Attention/" class="archive-article-date">
-  	<time datetime="2019-09-13T08:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-13</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/13/DL笔记-Attention/">Deep Learning笔记——关于Attention</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Deep Learning</a>
-        		</li>
-      		 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">深度学习</a>
         		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Tensorflow</a>
+        		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -210,509 +339,148 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=https://zessay.github.io/2019/07/12/TF笔记-关于TFRecords和tf.Example的使用/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/10/ML笔记-从SGD到Adam/" class="archive-article-date">
-  	<time datetime="2019-09-10T01:30:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-10</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2019/08/09/NLP笔记-Glove_and_CoVe/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          NLP笔记——GloVe &amp; CoVe
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/17/leetcode_14/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">LC14三数之和</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/10/ML笔记-从SGD到Adam/">Deep Learning笔记——从SGD到Adam</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Deep Learning</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">深度学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/深度学习//" class="article-tag-list-link color5">深度学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-关于tf-Example"><span class="toc-number">1.</span> <span class="toc-text">1. 关于tf.Example</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-tf-Example的数据类型"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 tf.Example的数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-创建一个tf-Example数据"><span class="toc-number">1.2.</span> <span class="toc-text">1.2 创建一个tf.Example数据</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-使用tf-data读写TFRecord"><span class="toc-number">2.</span> <span class="toc-text">2. 使用tf.data读写TFRecord</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-写入TFRecord文件"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 写入TFRecord文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-读取TFRecord文件"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 读取TFRecord文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-一个读写TFRecord的实例"><span class="toc-number">3.</span> <span class="toc-text">3. 一个读写TFRecord的实例</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/09/NLP笔记-从HMM到CRF/" class="archive-article-date">
-  	<time datetime="2019-09-09T14:30:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/09/NLP笔记-从HMM到CRF/">NLP笔记——从HMM到CRF</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">自然语言处理</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">NLP</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/深度学习//" class="article-tag-list-link color5">深度学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/08/NLP笔记-FastText/" class="archive-article-date">
-  	<time datetime="2019-09-08T14:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/08/NLP笔记-FastText/">NLP笔记——FastText</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">自然语言处理</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">NLP</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">论文</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/论文//" class="article-tag-list-link color3">论文</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/08/ML笔记-DNN和CNN/" class="archive-article-date">
-  	<time datetime="2019-09-08T09:30:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/08/ML笔记-DNN和CNN/">Deep Learning笔记——DNN &amp; CNN</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Deep Learning</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">深度学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/深度学习//" class="article-tag-list-link color5">深度学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/06/DL笔记-XGBoost/" class="archive-article-date">
-  	<time datetime="2019-09-06T02:30:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/06/DL笔记-XGBoost/">Machine Learning笔记——XGBoost &amp; LightGBM</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Machine Learning</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">机器学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/机器学习//" class="article-tag-list-link color5">机器学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/01/DL笔记-SVM/" class="archive-article-date">
-  	<time datetime="2019-09-01T04:30:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-01</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/01/DL笔记-SVM/">Machine Learning笔记——SVM</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Machine Learning</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">机器学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/机器学习//" class="article-tag-list-link color5">机器学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/08/31/ML笔记-RNN_eq/" class="archive-article-date">
-  	<time datetime="2019-08-31T14:30:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-31</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/08/31/ML笔记-RNN_eq/">Deep Learning笔记——RNN&amp;LSTM&amp;GRU</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Deep Learning</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">深度学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/深度学习//" class="article-tag-list-link color5">深度学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/08/09/NLP笔记-Word2Vec/" class="archive-article-date">
-  	<time datetime="2019-08-09T11:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/08/09/NLP笔记-Word2Vec/">NLP笔记——Wor2Vec</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">自然语言处理</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">NLP</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">论文</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/论文//" class="article-tag-list-link color3">论文</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/08/09/NLP笔记-Glove_and_CoVe/" class="archive-article-date">
-  	<time datetime="2019-08-09T10:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/08/09/NLP笔记-Glove_and_CoVe/">NLP笔记——GloVe &amp; CoVe</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">自然语言处理</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">NLP</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">论文</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/论文//" class="article-tag-list-link color3">论文</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/2/">Next &raquo;</a>
-    </nav>
+  
+
+  
+  <div id="gitalk-container" style="padding: 0px 30px 0px 30px;"></div> 
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script type="text/javascript">
+
+if(true){
+	var gitalk = new Gitalk({
+  	clientID: '669c4316b3f5f08a2228',
+  	clientSecret: '42797e0b5c99ec021eea5fe88effe6cb4e2ad7e4',
+  	repo: 'blogComments',
+  	owner: 'Zessay',
+  	admin: ['Zessay'],
+  	id: 'Fri Jul 12 2019 10:00:00 GMT+0800',
+  	distractionFreeMode: 'true'
+})
+gitalk.render('gitalk-container') 
+}
+</script>
+
+  
+
+  
+
   
 
 
@@ -736,8 +504,8 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
